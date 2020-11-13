@@ -1,0 +1,3384 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>控制面板</title>
+  <link rel="stylesheet" href="../css/bootstrap.min.css" type="text/css">
+  <link rel="stylesheet" href="../css/main.css" type="text/css">
+  <link rel="stylesheet" href="../css/jquery.webui-popover.min.css">
+  <script src="../js/lib/jquery-3.2.1.min.js"></script>
+  <script src="../js/lib/bootstrap.min.js"></script>
+  <script src="../js/lib/echarts.min.js"></script>
+  <script src="../js/lib/moment.min.js"></script>
+  <script src="../js/lib/util.js"></script>
+  <script src="../assets/pouchdb-nightly.min.js"></script>
+  <script src="../assets/bootstrap-3.0.0/js/bootstrap.js"></script>
+  <script src="../assets/d3.v3.js" charset="UTF-8"></script>
+  <script src="../assets/ICanHaz.js"></script>
+  <script src="../assets/jquery.bootstrapvalidator/bootstrapValidator.js"></script>
+  <script src="../scripts/BackgroundScript.js"></script>
+  <script src="../scripts/ContentScript.js"></script>
+  <script src="../scripts/Config.js"></script>
+  <script src="../scripts/Selector.js"></script>
+  <script src="../scripts/SelectorList.js"></script>
+  <script src="../scripts/Selector/SelectorElement.js"></script>
+  <script src="../scripts/Selector/SelectorLink.js"></script>
+  <script src="../scripts/Selector/SelectorPopupLink.js"></script>
+  <script src="../scripts/Selector/SelectorGroup.js"></script>
+  <script src="../scripts/Selector/SelectorText.js"></script>
+  <script src="../scripts/Selector/SelectorImage.js"></script>
+  <script src="../scripts/Selector/SelectorHTML.js"></script>
+  <script src="../scripts/Selector/SelectorElementAttribute.js"></script>
+  <script src="../scripts/Selector/SelectorTable.js"></script>
+  <script src="../scripts/Selector/SelectorElementScroll.js"></script>
+  <script src="../scripts/Selector/SelectorElementClick.js"></script>
+  <script src="../scripts/Sitemap.js"></script>
+  <script src="../scripts/SelectorGraph.js"></script>
+  <script src="../scripts/SelectorGraphv2.js"></script>
+  <script src="../scripts/Store.js"></script>
+  <script src="../scripts/StoreDevtools.js"></script>
+  <script src="../js/lib/jquery.webui-popover.min.js"></script>
+  <script src="../js/lib/jquery.qrcode.min.js"></script>
+  <script src="../js/lib/dexie.js"></script>
+  <script src="../js/dbStore.js"></script>
+</head>
+
+<body>
+  <div class="panel-container">
+    <ul class="nav nav-tabs" id="main-tab">
+      <li role="presentation" class="active"><a href="###">我的监控</a></li>
+      <li role="presentation"><a href="###">热度潜⼒问题查找</a></li>
+      <li role="presentation"><a href="###">知乎百度SEO</a></li>
+      <li role="presentation"><a href="###">大V回答监控</a></li>
+      <li role="presentation"><a href="###">回答位置监控</a></li>
+      <li role="presentation"><a href="###">数据采集</a></li>
+    </ul>
+    <div class="panel-tab" id="monitoring-tab">
+      <div style="padding: 10px 10px 0;display: flex">
+   
+        <div id="largeContent" style="display: none;">
+          <p>监控⾯板依据不同监控渠道来源，为三块，分别是：</p>
+          <p>（1）⾃然监控，通过知乎⻚⾯添加监控的</p>
+          <p>（2）潜⼒监控，通过潜⼒问题界⾯加⼊监控的</p>
+          <p>（3）百度SEO监控，通过百度SEO界⾯加⼊监控的</p>
+          <p>后两者如果为跳转到知乎⻚⾯再添加监控，则统计在（1）中
+            <p>关于监控数据变动情况，为了便于⼤家及时发现热度问题，我们在此处设置了三个阈值，但达
+              到第1个值时会显示1个⼩⽕把，当达到第3个值时会显示3个⼩⽕把。</p>
+            <p>但没有显示⼩⽕把说明 。
+              此时还未有问题达到阈值，您可以通过数据增量列对其进⾏排序 。</p>
+        </div>
+        <div style="flex: 1" id="viewport">
+          <div class="panel panel-default" style="height: 100%">
+            <div class="panel-heading"
+              style="display: flex;justify-content: space-between;align-items: center;padding-right: 40px;">
+              <div><b>监控列表</b> <span style="margin-left: 10px" id="memberInfo"></span></div>
+              <div style="display: flex;align-items: center;">
+                必看
+                <b class="b-ips show-pop-large" style="margin-left:5px;cursor: pointer;"></b>
+              </div>
+            </div>
+            <div class="panel" style="border:none;" id="questionsParent1">
+              <h1 class="monitor-title">
+                <button class="btn btn-primary btn btn-xs " id="addQuestionBtn" data-toggle="modal" data-target="#addQuestionPanel" type="button">
+                  添加监控问题
+                </button>
+                <button class="btn btn-primary btn btn-xs " id="synchronousCloud1" style="margin-left: 50px;"
+                  type="button">
+                  问题列表同步到云端
+                </button>
+                <button class="btn btn-primary btn btn-xs " id="restoreCloud1" type="button">
+                  恢复云端数据
+                </button>
+                <button class="btn btn-primary btn btn-xs " id="exportQuestionList1" type="button">
+                  导出问题列表
+                </button>
+              </h1>
+              <table class="table table-stripe table-striped table-bordered seo-table" style="font-size: 13px;">
+                <thead>
+                  <tr>
+                    <th width="50">
+                      <p>序号</p>
+                    </th>
+                    <th width="100">
+                      <p>类别</p>
+                    </th>
+                    <th>
+                      <p>标题</p>
+                    </th>
+                    <th width="80">
+                      <p>回答数</p>
+                    </th>
+                    <th width="80">
+                      <p>关注数</p>
+                    </th>
+                    <th width="90">
+                      <p>浏览数</p>
+                    </th>
+                    <th width="70">
+                      <p>首赞</p>
+                    </th>
+                    <th width="70">
+                      <p>二赞</p>
+                    </th>
+                    <th width="120">
+                      <p class="caret-content natural-sort-btn">
+                        3小时增量
+                        <span class="caret-wrapper">
+                          <i class="sort-caret ascending"></i>
+                          <i class="sort-caret descending"></i>
+                        </span>
+                      </p>
+                    </th>
+                    <th width="150">
+                      <p>操作</p>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody id="questions1">
+                </tbody>
+                <tfoot id="questionsFooter1">
+                  <tr>
+                    <td colspan="10" style="background: #f5f5f5;text-align: right;padding-right: 25px">总条数: <b>0</b></td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" style="width: 700px" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                  aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title" id="questionTitle"></h4>
+            </div>
+            <div class="modal-body" style="padding:10px">
+              <ul class="echarts-tabs">
+                <li class="active">浏览增量</li>
+                <li>浏览数</li>
+                <li>回答数</li>
+                <li>首赞</li>
+                <li>二赞</li>
+                <li>关注数</li>
+              </ul>
+              <div id="main" style="margin:0 auto;width: 650px;height:300px;"></div>
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th>序号</th>
+                    <th width="160">监控时间</th>
+                    <th>回答数</th>
+                    <th>关注数</th>
+                    <th>浏览数</th>
+                    <th>首赞</th>
+                    <th>二赞</th>
+                  </tr>
+                </thead>
+                <tbody id="monitorData">
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-tab" id="search-hot-tab" style="display: none">
+      <div class="search-hot-container">
+        <div class="panel panel-default" style="padding: 0;margin-bottom: 10px">
+          <div class="panel-heading"
+            style="display: flex;justify-content: space-between;align-items: center;padding-right: 40px;">
+            <form class="form-inline" id="searchHotForm">
+              <div class="form-group">
+                <div class="input-group" style="position: relative;">
+                  <input type="text" style="width: 516px" autocomplete="off" class="form-control" id="name"
+                    placeholder="输入关键词点击搜索后请耐心等待1-3分钟，采集完成后有一个数据清洗的过程">
+
+                  <input type="text" style="width: 100px;margin-left: 5px"  autocomplete="off" class="form-control" id="vCount"
+                         placeholder="浏览量大于">
+
+                  <input type="text" style="width: 80px;margin-left: 5px"  autocomplete="off" class="form-control" id="firstCount"
+                         placeholder="首赞小于">
+
+                  <input type="text" style="width: 80px;margin-left: 5px"  autocomplete="off" class="form-control" id="secondCount"
+                         placeholder="二赞小于">
+
+                  <input type="text" style="width: 100px;margin-left: 5px"  autocomplete="off" class="form-control" id="aCount"
+                         placeholder="回答数小于">
+
+                  <input type="text" style="width: 80px;margin-left: 5px"  autocomplete="off" class="form-control" id="score"
+                         placeholder="评分大于">
+
+                  <div class="btn-group" style=" margin-left: 5px" >
+                    <button type="button" class="btn btn-default dropdown-toggle"
+                            data-toggle="dropdown" id="lupdate">
+                      最近更新<span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                      <li class="dropdown-active"><a href="#" >不限</a></li>
+                      <li><a href="#">近一月</a></li>
+                      <li><a href="#">近三个月</a></li>
+
+                      <li><a href="#">近一年</a></li>
+                    </ul>
+                  </div>
+
+
+
+
+                  <div class="beforehand-input">
+                    <ul>
+                    </ul>
+                  </div>
+                </div>
+
+
+
+
+              </div>
+              <button type="button" class="btn btn-primary" data-loading-text="请稍等..." autocomplete="off" id="search"
+                style="padding:6px 20px;display:none">搜索
+              </button>
+              <button type="button" class="btn btn-primary" data-loading-text="请稍等..." autocomplete="off"
+                id="searchAllNetwork" style="padding:6px 20px">搜索(请勿手动关闭弹出框)
+              </button>
+              <span style="padding-left: 10px">( 建议不要直接搜⼤词汇，⽐如基⾦。搜“指数基⾦”更好些。)</span>
+            </form>
+            <b class="b-ips" style="cursor: pointer;" data-toggle="popover" title="提示" data-placement="left"
+              data-content="<p>请耐⼼等待数据抓取完成。此项功能结合两个评判维度，第⼀⼤概率有流量；第⼆能将排名做
+              到第⼀或者第⼆。所以展示出来的数据已经进⾏了⼀次清洗筛选。</p>
+              <p>什么样的问题更值得加⼊监控？</p>
+              <p>（1）评分越⾼越值得监控</p>
+                <p>（2）问题提问时间距离当下越近越值得监控</p>
+                  <p>（3）最近更新时间越近越值得监控</p> "></b>
+          </div>
+          <div class="panel-body">
+            <table class="table table-stripe search-table seo-table table-striped table-bordered"
+              style="font-size: 13px;">
+              <thead>
+                <tr>
+                  <th>
+                    <p class="caret-content" style="cursor: auto;">标题</p>
+                  </th>
+                  <th width="180">
+                    <p class="caret-content score-btn">
+                      评分(基于知乎规则计算)
+                      <span class="caret-wrapper">
+                        <i class="sort-caret ascending"></i>
+                        <i class="sort-caret descending"></i>
+                      </span>
+                    </p>
+                  </th>
+                  <th width="70">
+                    <p>
+                      回答数
+                    </p>
+                  </th>
+                  <th width="70">
+                    <p>
+                      关注数
+                    </p>
+                  </th>
+                  <th width="70">
+                    <p>
+                      浏览数
+                    </p>
+                  </th>
+                  <th width="70">
+                    <p>
+                      首赞
+                    </p>
+                  </th>
+                  <th width="70">
+                    <p>
+                      二赞
+                    </p>
+                  </th>
+                  <th width="145">
+                    <p class="caret-content created_time-btn">
+                      问题提问时间
+                      <span class="caret-wrapper">
+                        <i class="sort-caret ascending"></i>
+                        <i class="sort-caret descending"></i>
+                      </span>
+                    </p>
+                  </th>
+                  <th width="120">
+                    <p class="caret-content update_time-btn">
+                      最近更新时间
+                      <span class="caret-wrapper">
+                        <i class="sort-caret ascending"></i>
+                        <i class="sort-caret descending"></i>
+                      </span>
+                    </p>
+                  </th>
+                  <th width="80">
+                    <p class="caret-content" style="cursor: auto;">操作</p>
+                  </th>
+                </tr>
+              </thead>
+              <tbody id="search-questions">
+              </tbody>
+              <tfoot id="questions-footer" style="display:none;">
+                <tr>
+                  <td colspan="10" style="background: #f5f5f5;text-align: right;padding-right: 25px">总条数: <b>100</b>
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="panel-tab" style="display: none">
+      <div class="search-hot-container">
+        <div class="panel panel-default" style="padding: 0;margin-bottom: 10px">
+          <div class="panel-heading"
+            style="display: flex;justify-content: space-between;align-items: center;padding-right: 40px;">
+            <form class="form-inline">
+              <div class="form-group">
+                <div class="input-group" style="position: relative;">
+                  <input type="text" style="width: 220px" id="zhbdSeoKeyword" autocomplete="off" class="form-control"
+                    placeholder="请输⼊关键词（例如“基⾦“）">
+                </div>
+                <div class="input-group" style="position: relative;">
+                  <input type="text" style="width: 220px" id="zhbdRanking" autocomplete="off" class="form-control"
+                    placeholder="搜索排名在X名前（例如“10”）">
+                </div>
+                <div class="input-group" style="position: relative;">
+                  <input type="text" style="width: 220px" id="zhbdSv" autocomplete="off" class="form-control"
+                    placeholder="移动⽇检索量⼤于（例如“100”）">
+                </div>
+              </div>
+              <button type="button" class="btn btn-primary" id="searchZHBDSEO" data-loading-text="请稍等..."
+                autocomplete="off" style="padding:6px 20px">搜索
+              </button>
+            </form>
+            <b class="b-ips" style="cursor: pointer;" data-toggle="popover" title="提示" data-placement="left"
+              data-content="知乎在百度的搜索权重中很⾼，这项功能就是借助在知乎回答问题获取百度的搜索量。如果搜
+            索⼀个关键词，没有对应的知乎问题，不⽤奇怪，不是每⼀个都会被百度收录，尝试将词汇放
+            的更⼤⼀点。⽐如“指数基⾦”在此处就不如“基⾦”好。 "></b>
+          </div>
+          <div class="panel-body">
+            <table class="table seo-table table-stripe table-striped table-bordered" style="font-size: 13px;">
+              <thead>
+                <tr>
+                  <th width="200">
+                    <p>关键字</p>
+                  </th>
+                  <th>
+                    <p>标题</p>
+                  </th>
+                  <th width="80">
+                    <p class="caret-content ranking-btn ">
+                      排名
+                      <span class="caret-wrapper">
+                        <i class="sort-caret ascending"></i>
+                        <i class="sort-caret descending"></i>
+                      </span>
+                    </p>
+                  </th>
+                  <th width="120">
+                    <p class="caret-content pcSv-btn">
+                      PC端检索量
+                      <span class="caret-wrapper">
+                        <i class="sort-caret ascending"></i>
+                        <i class="sort-caret descending"></i>
+                      </span>
+                    </p>
+                  </th>
+                  <th width="120">
+                    <p class="caret-content appSv-btn">
+                      移动端检索量
+                      <span class="caret-wrapper">
+                        <i class="sort-caret ascending"></i>
+                        <i class="sort-caret descending"></i>
+                      </span>
+                    </p>
+                  </th>
+                  <th width="80">
+                    <p>
+                      浏览量
+                    </p>
+                  </th>
+                  <th width="80">
+                    <p>
+                      回答数
+                    </p>
+                  </th>
+                  <th width="70">
+                    <p>
+                      评分
+                    </p>
+                  </th>
+                  <th width="70">
+                    <p>
+                      首赞
+                    </p>
+                  </th>
+                  <th width="70">
+                    <p>
+                      二赞
+                    </p>
+                  </th>
+                  <th width="80">
+                    <p>
+                      操作
+                    </p>
+                  </th>
+                </tr>
+              </thead>
+              <tbody id="searchSeoTbody">
+                <tr>
+                  <td colspan="11" style="text-align:center;"><span style="color:#666">暂无数据</span></td>
+                </tr>
+              </tbody>
+              <tfoot id="searchSeoTfoot" style="display: none;">
+                <tr>
+                  <td colspan="11" style="background: #f5f5f5;text-align: right;padding-right: 25px">总条数: <b>100</b>
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-tab" style="display: none">
+      <div style="padding: 10px;">
+        <div class="panel panel-default">
+          <div class="panel-heading" style="display: flex;justify-content: space-between;align-items: center;padding-right: 40px;">
+          <div class="zh-tab-content">
+            <div>
+              <div class="form-inline">
+                <div class="form-group">
+                  地址:
+                  <input type="text" style="width:390px" autocomplete="off" class="form-control" id="zhUrl">
+                </div>
+                <div class="form-group" style="padding:0 10px;line-height: 34px;">
+                  抓取第 <input type="text" style="margin: 0 5px;width:50px;text-align: center;" class="form-control"
+                             id="zhPageStart"> 页到
+                  <input type="text" style="margin: 0 5px;width:50px;text-align: center;" class="form-control"
+                         id="zhPageEnd">
+                  页
+                </div>
+                <button class="btn btn-primary btn-sm" id="searchZHDV">确定</button> <span
+                      style="margin-left:10px;color:#666;font-size: 14px;font-weight: bold;color:#f00;">请勿手动关闭弹出框</span>
+              </div>
+              <p style="padding-top:10px;color:#666">示例：https://www.zhihu.com/people/thebookworm/answers</p>
+            </div>
+
+            <span class="btn btn-link" id="downZHDV" style="display: none;">下载</span>
+          </div>
+          </div>
+          <div class="panel-body">
+            <table class="table table-stripe table-striped table-bordered zhihu-people-table" style="font-size: 13px;">
+            <thead>
+            <tr>
+              <th><p>回答标题</p></th>
+              <th width="60"><p>赞数</p></th>
+              <th width="60"><p>评论数</p></th>
+              <th width="180">
+                <p class="caret-content">
+                  评分
+                  <span class="caret-wrapper">
+                        <i class="sort-caret ascending"></i>
+                        <i class="sort-caret descending"></i>
+                      </span>
+                </p>
+              </th>
+              <th width="80"><p>首赞</p></th>
+              <th width="80"><p>二赞</p></th>
+              <th width="160"><p>最近更新时间</p></th>
+              <th width="80"><p>操作</p></th>
+            </tr>
+            </thead>
+            <tbody id="search-answer">
+            <tr>
+              <td colspan="8" style="text-align:center;"><span style="color:#666">暂无数据</span></td>
+            </tr>
+            </tbody>
+            <tfoot id="answer-footer" style="display: none;">
+            <tr>
+              <td colspan="8" style="background: #f5f5f5;text-align: right;padding-right: 25px">总条数: <b>100</b>
+              </td>
+            </tr>
+            </tfoot>
+          </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-tab" style="display: none">
+      <div style="padding: 10px;">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <div style="padding-bottom:5px">
+              <div class="form-inline">
+                <div class="form-group">
+                  监控此回答
+                  <input type="text" style="width:420px" autocomplete="off" id="rankingQuestionUrl" class="form-control" placeholder="回答地址">
+                </div>
+                <div class="form-group" style="padding:0 10px;line-height: 34px;">
+                  排名滑落第
+                  <input type="text" id="rankingPos" style="margin: 0 5px;width:50px;text-align: center;" class="form-control" /> 名时，会标红提醒
+                </div>
+                <button class="btn btn-primary btn-sm" id="setRanking">确定</button>
+              </div>
+              <p style="padding-top:10px;color:#666">示例：https://www.zhihu.com/question/338230721/answer/1547576668</p>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="sub-tab-content zh-tab-content">
+              <table class="table table-stripe table-striped table-bordered" style="font-size: 13px;">
+                <thead>
+                  <tr>
+                    <th width="50">序号</th>
+                    <th>标题</th>
+                    <th width="100">当前排名</th>
+                    <th width="100">监控排名</th>
+                    <th width="100">首赞</th>
+                    <th width="100">二赞</th>
+                    <th width="80">操作</th>
+                  </tr>
+                </thead>
+                <tbody id="rankingTbody">
+                  <tr>
+                    <td colspan="7" style="text-align:center;"><span style="color:#666">暂无数据</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-tab" style="display: none">
+      <div style="padding: 10px">
+
+        <div class="panel panel-default" style="padding: 0;margin-bottom: 10px">
+          <div class="panel-heading">
+            <dl class="panel-tab-nav">
+              <dt>来源：</dt>
+              <dd class="source-tab">
+                <a href="###" class="active">知乎</a><a href="###">豆瓣</a><a href="###">贴吧</a><a href="###">百度知道</a><a
+                  href="###">简书</a><a href="###">今日头条</a><a href="###">微博</a><a href="###">公众号</a><a href="###">B站</a><a
+                  href="###">荔枝微课</a><a href="###">千聊</a><a href="###">有讲</a><a href="###">唯库</a><a href="###">网易云课堂
+                </a><a href="###">腾讯课堂 </a>
+                <a href="###" class="empty">得到 </a>
+                <a href="###">喜马拉雅 </a>
+                <a href="###">在行 </a>
+                <a href="###">淘宝 </a>
+                <a href="###">京东 </a>
+                <a href="###">当当 </a><a href="###">1688
+                </a><a href="###">亚马逊 </a><a href="###">阿里巴巴 </a><a href="###">虾皮 </a><a href="###">速卖通 </a><a
+                  href="###">美团 </a><a href="###">赶集网 </a><a href="###">智联招聘 </a><a href="###">CSDN </a><a href="###">幕布
+                </a><a href="###">搜狗微信 </a><a href="###">博客园 </a><a href="###">拉勾网 </a><a href="###">youtube </a>
+              </dd>
+            </dl>
+          </div>
+          <div class="panel-body">
+            <div id="zhihu" class="source-container">
+              <ul class="nav nav-tabs zhihu-nav">
+                <li role="presentation" class="active"><a href="###">知乎大v关注的问题</a></li>
+              </ul>
+              <div class="sub-tab-content zh-tab-content" >
+                <div>
+                  <div class="form-inline">
+                    <div class="form-group">
+                      地址:
+                      <input type="text" style="width:390px" autocomplete="off" class="form-control" id="zhFollowUrl">
+                    </div>
+                    <div class="form-group" style="padding:0 10px;line-height: 34px;">
+                      抓取第 <input type="text" style="margin: 0 5px;width:50px;text-align: center;" class="form-control"
+                        id="zhFollowPageStart"> 页到
+                      <input type="text" style="margin: 0 5px;width:50px;text-align: center;" class="form-control"
+                        id="zhFollowPageEnd">
+                      页
+                    </div>
+                    <button class="btn btn-primary btn-sm" id="searchFollowZHDV">确定</button> <span
+                      style="margin-left:10px;color:#666;font-size: 14px;font-weight: bold;color:#f00;">请勿手动关闭弹出框</span>
+                  </div>
+                  <p style="padding-top:10px;color:#666">示例：https://www.zhihu.com/people/thebookworm/following/questions
+                  </p>
+                </div>
+
+                <span class="btn btn-link" style="display: none;" id="downZHFollow">下载</span>
+                <table class="table table-stripe table-striped table-bordered" style="font-size: 13px;">
+                  <thead>
+                    <tr>
+                      <th>问题标题</th>
+                      <th width="120">时间</th>
+                      <th width="100">回答数</th>
+                      <th width="100">关注人数</th>
+                    </tr>
+                  </thead>
+                  <tbody id="searchFollowAnswer">
+                    <tr>
+                      <td colspan="4" style="text-align:center;"><span style="color:#666">暂无数据</span></td>
+                    </tr>
+                  </tbody>
+                  <tfoot id="answerFollowFooter" style="display: none;">
+                    <tr>
+                      <td colspan="4" style="background: #f5f5f5;text-align: right;padding-right: 25px">总条数: <b>100</b>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+
+            </div>
+            <div id="douban" class="source-container" style="display: none;">
+              <ul class="nav nav-tabs douban-nav">
+                <li role="presentation" class="active"><a href="###">豆瓣电影</a></li>
+                <li role="presentation"><a href="###">豆瓣书籍</a></li>
+                <li role="presentation"><a href="###">豆瓣音乐</a></li>
+                <li role="presentation"><a href="###">豆瓣日记</a></li>
+                <li role="presentation"><a href="###">某本书的所有评论</a></li>
+              </ul>
+              <div class="sub-tab-content douban-tab-content">
+                <div>
+                  <div class="form-inline">
+                    <div class="form-group">
+                      关键字:
+                      <input type="text" style="width:200px" autocomplete="off" class="form-control" id="doubanUrl">
+                    </div>
+                    <button class="btn btn-primary btn-sm" id="searchDouban">确定</button> <span
+                      style="margin-left:10px;color:#666;font-size: 14px;font-weight: bold;color:#f00;">请勿手动关闭弹出框</span>
+                  </div>
+                  <p style="padding-top:10px;color:#666">示例：写作</p>
+                </div>
+
+                <span class="btn btn-link" style="display: none;" id="downDbMovie">下载</span>
+                <table class="table table-stripe table-striped table-bordered" style="font-size: 13px;">
+                  <thead>
+                    <tr>
+                      <th>电影名字</th>
+                      <th width="100">评分</th>
+                      <th width="100">评价人数</th>
+                      <th width="390px">主演</th>
+                      <th width="300">简介</th>
+                    </tr>
+                  </thead>
+                  <tbody id="searchDoubanTable">
+                    <tr>
+                      <td colspan="5" style="text-align:center;"><span style="color:#666">暂无数据</span></td>
+                    </tr>
+                  </tbody>
+                  <tfoot id="doubanfooter" style="display: none;">
+                    <tr>
+                      <td colspan="5" style="background: #f5f5f5;text-align: right;padding-right: 25px">总条数: <b>100</b>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+              <div class="sub-tab-content douban-tab-content" style="display: none;">
+                <div>
+                  <div class="form-inline">
+                    <div class="form-group">
+                      关键字:
+                      <input type="text" style="width:200px" autocomplete="off" class="form-control" id="Book">
+                    </div>
+                    <button class="btn btn-primary btn-sm" id="searchDoubanBook">确定</button> <span
+                      style="margin-left:10px;color:#666;font-size: 14px;font-weight: bold;color:#f00;">请勿手动关闭弹出框</span>
+                  </div>
+                  <p style="padding-top:10px;color:#666">示例：写作</p>
+                </div>
+
+                <span class="btn btn-link" style="display: none;" id="downDbBook">下载</span>
+                <table class="table table-stripe table-striped table-bordered" style="font-size: 13px;">
+                  <thead>
+                    <tr>
+                      <th>书名</th>
+                      <th width="100">评分</th>
+                      <th width="100">评价人数</th>
+                      <th width="200">作者</th>
+                      <th width="420">简介</th>
+                    </tr>
+                  </thead>
+                  <tbody id="searchDoubanBookTable">
+                    <tr>
+                      <td colspan="5" style="text-align:center;"><span style="color:#666">暂无数据</span></td>
+                    </tr>
+                  </tbody>
+                  <tfoot id="doubanBookfooter" style="display: none;">
+                    <tr>
+                      <td colspan="5" style="background: #f5f5f5;text-align: right;padding-right: 25px">总条数: <b>100</b>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+              <div class="sub-tab-content douban-tab-content" style="display: none;">
+                <div>
+                  <div class="form-inline">
+                    <div class="form-group">
+                      关键字:
+                      <input type="text" style="width:200px" autocomplete="off" class="form-control" id="Music">
+                    </div>
+                    <button class="btn btn-primary btn-sm" id="searchDoubanMusic">确定</button> <span
+                      style="margin-left:10px;color:#666;font-size: 14px;font-weight: bold;color:#f00;">请勿手动关闭弹出框<span></span>
+                  </div>
+                  <p style="padding-top:10px;color:#666">示例：写作</p>
+                </div>
+
+                <span class="btn btn-link" style="display: none;" id="downDbMusic">下载</span>
+                <table class="table table-stripe table-striped table-bordered" style="font-size: 13px;">
+                  <thead>
+                    <tr>
+                      <th>音乐名字</th>
+                      <th width="100">评分</th>
+                      <th width="100">评价人数</th>
+                      <th width="200">作者</th>
+                      <th width="420">简介</th>
+                    </tr>
+                  </thead>
+                  <tbody id="searchDoubanMusicTable">
+                    <tr>
+                      <td colspan="5" style="text-align:center;"><span style="color:#666">暂无数据</span></td>
+                    </tr>
+                  </tbody>
+                  <tfoot id="doubanMusicfooter" style="display: none;">
+                    <tr>
+                      <td colspan="5" style="background: #f5f5f5;text-align: right;padding-right: 25px">总条数: <b>100</b>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+              <div class="sub-tab-content douban-tab-content" style="display: none;">
+                <div>
+                  <div class="form-inline">
+                    <div class="form-group">
+                      关键字:
+                      <input type="text" style="width:200px" autocomplete="off" class="form-control" id="Diary">
+                    </div>
+                    <button class="btn btn-primary btn-sm" id="searchDoubanDiary">确定</button> <span
+                      style="margin-left:10px;color:#666;font-size: 14px;font-weight: bold;color:#f00;">请勿手动关闭弹出框<span></span>
+                  </div>
+                  <p style="padding-top:10px;color:#666">示例：写作</p>
+                </div>
+
+                <span class="btn btn-link" style="display: none;" id="downDbDiary">下载</span>
+                <table class="table table-stripe table-striped table-bordered" style="font-size: 13px;">
+                  <thead>
+                    <tr>
+                      <th>日记标题</th>
+                      <th width="100">喜欢数</th>
+                      <th width="200">作者</th>
+                      <th width="420">简介</th>
+                    </tr>
+                  </thead>
+                  <tbody id="searchDoubanDiaryTable">
+                    <tr>
+                      <td colspan="4" style="text-align:center;"><span style="color:#666">暂无数据</span></td>
+                    </tr>
+                  </tbody>
+                  <tfoot id="doubanDiaryfooter" style="display: none;">
+                    <tr>
+                      <td colspan="4" style="background: #f5f5f5;text-align: right;padding-right: 25px">总条数: <b>100</b>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+              <div class="sub-tab-content douban-tab-content" style="display: none;">
+                <div>
+                  <div class="form-inline">
+                    <div class="form-group">
+                      地址:
+                      <input type="text" style="width:380px" autocomplete="off" class="form-control" id="Comment">
+                    </div>
+                    <button class="btn btn-primary btn-sm" id="searchDoubanComment">确定</button> <span
+                      style="margin-left:10px;color:#666;font-size: 14px;font-weight: bold;color:#f00;">请勿手动关闭弹出框<span></span>
+                  </div>
+                  <p style="padding-top:10px;color:#666">示例：https://book.douban.com/subject/26781120/comments/hot</p>
+                </div>
+
+                <span class="btn btn-link" style="display: none;" id="downDbCommen">下载</span>
+                <table class="table table-stripe table-striped table-bordered" style="font-size: 13px;">
+                  <thead>
+                    <tr>
+                      <th>评论人名字</th>
+                      <th width="100">评论日期</th>
+                      <th width="100">有用数</th>
+                      <th width="420">评论内容</th>
+                    </tr>
+                  </thead>
+                  <tbody id="searchDoubanCommentTable">
+                    <tr>
+                      <td colspan="4" style="text-align:center;"><span style="color:#666">暂无数据</span></td>
+                    </tr>
+                  </tbody>
+                  <tfoot id="doubanCommentfooter" style="display: none;">
+                    <tr>
+                      <td colspan="4" style="background: #f5f5f5;text-align: right;padding-right: 25px">总条数: <b>100</b>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
+
+            <div id="tieba" class="source-container tab-parent" style="display: none;">
+              <ul class="nav nav-tabs ">
+                <li role="presentation" class="active"><a href="###">某个贴吧所有帖子</a></li>
+                <li role="presentation"><a href="###">某个帖子所有内容</a></li>
+              </ul>
+              <div class="sub-tab-content ">
+                <div>
+                  <div class="form-inline">
+                    <div class="form-group">
+                      地址:
+                      <input type="text" style="width:380px" autocomplete="off" class="form-control" id="tiebaUrl">
+                    </div>
+                    <button class="btn btn-primary btn-sm" id="searchTieba">确定</button> <span
+                      style="margin-left:10px;color:#666;font-size: 14px;font-weight: bold;color:#f00;">请勿手动关闭弹出框<span></span>
+                  </div>
+                  <p style="padding-top:10px;color:#666">示例：https://tieba.baidu.com/f?kw=%E8%8B%B9%E6%9E%9C</p>
+                </div>
+
+                <span class="btn btn-link" style="display: none;" id="downTieBa">下载</span>
+                <table class="table table-stripe table-striped table-bordered" style="font-size: 13px;">
+                  <thead>
+                    <tr>
+                      <th>名称</th>
+                      <th width="100">回复数</th>
+                      <th width="150">作者</th>
+                    </tr>
+                  </thead>
+                  <tbody id="searchTieBaTable">
+                    <tr>
+                      <td colspan="3" style="text-align:center;"><span style="color:#666">暂无数据</span></td>
+                    </tr>
+                  </tbody>
+                  <tfoot id="tieBafooter" style="display: none;">
+                    <tr>
+                      <td colspan="3" style="background: #f5f5f5;text-align: right;padding-right: 25px">总条数: <b>100</b>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+              <div class="sub-tab-content" style="display: none;">
+                <div>
+                  <div class="form-inline">
+                    <div class="form-group">
+                      地址:
+                      <input type="text" style="width:380px" autocomplete="off" class="form-control" id="contentUrl">
+                    </div>
+                    <button class="btn btn-primary btn-sm" id="searchTieBaContent">确定</button> <span
+                      style="margin-left:10px;color:#666;font-size: 14px;font-weight: bold;color:#f00;">请勿手动关闭弹出框<span></span>
+                  </div>
+                  <p style="padding-top:10px;color:#666">示例：http://tieba.baidu.com/p/6289672951</p>
+                </div>
+
+                <span class="btn btn-link" style="display: none;" id="downTieBaContent">下载</span>
+                <table class="table table-stripe table-striped table-bordered" style="font-size: 13px;">
+                  <thead>
+                    <tr>
+                      <th>作者名字</th>
+                      <th width="300">内容</th>
+                      <th width="150">内容来自哪里</th>
+                      <th width="100">几楼</th>
+                      <th width="180">时间</th>
+                    </tr>
+                  </thead>
+                  <tbody id="searchTieBaContentTable">
+                    <tr>
+                      <td colspan="5" style="text-align:center;"><span style="color:#666">暂无数据</span></td>
+                    </tr>
+                  </tbody>
+                  <tfoot id="tieBaContentfooter" style="display: none;">
+                    <tr>
+                      <td colspan="5" style="background: #f5f5f5;text-align: right;padding-right: 25px">总条数: <b>100</b>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
+
+            <div id="zhidao" class="source-container tab-parent" style="display: none;">
+              <ul class="nav nav-tabs ">
+                <li role="presentation" class="active"><a href="###">某个问题的所有回答</a></li>
+              </ul>
+              <div class="sub-tab-content ">
+                <div>
+                  <div class="form-inline">
+                    <div class="form-group">
+                      地址:
+                      <input type="text" style="width:380px" autocomplete="off" id="tieBaQuestionUrl"
+                        class="form-control">
+                    </div>
+                    <button class="btn btn-primary btn-sm" id="searchTieBaQuestion">确定</button> <span
+                      style="margin-left:10px;color:#666;font-size: 14px;font-weight: bold;color:#f00;">请勿手动关闭弹出框<span></span>
+                  </div>
+                  <p style="padding-top:10px;color:#666">示例：https://zhidao.baidu.com/question/24259898.html</p>
+                </div>
+
+                <span class="btn btn-link" style="display: none;" id="downZhiDaoQuestion">下载</span>
+                <table class="table table-stripe table-striped table-bordered" style="font-size: 13px;">
+                  <thead>
+                    <tr>
+                      <th>回答内容</th>
+                      <th width="100">赞同数</th>
+                      <th width="100">评论数</th>
+                      <th width="180">发布时间</th>
+                      <th width="180">作者名字</th>
+                    </tr>
+                  </thead>
+                  <tbody id="zhiDaoQuestionBody">
+                    <tr>
+                      <td colspan="5" style="text-align:center;"><span style="color:#666">暂无数据</span></td>
+                    </tr>
+                  </tbody>
+                  <tfoot id="zhiDaoQuestionFooter" style="display: none;">
+                    <tr>
+                      <td colspan="5" style="background: #f5f5f5;text-align: right;padding-right: 25px">总条数: <b>100</b>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
+
+            <div id="jianshu" class="source-container tab-parent" style="display: none;">
+              <ul class="nav nav-tabs ">
+                <li role="presentation" class="active"><a href="###">搜索文章信息</a></li>
+                <li role="presentation"><a href="###">某文章下所有评论</a></li>
+                <li role="presentation"><a href="###">某个专题下所有文章</a></li>
+              </ul>
+              <div class="sub-tab-content ">
+                <div>
+                  <div class="form-inline">
+                    <div class="form-group">
+                      关键字:
+                      <input type="text" style="width:200px" autocomplete="off" id="jianShuArticleUrl"
+                        class="form-control">
+                    </div>
+                    <button class="btn btn-primary btn-sm" id="searchJianShuArticle">确定</button> <span
+                      style="margin-left:10px;color:#666;font-size: 14px;font-weight: bold;color:#f00;">请勿手动关闭弹出框<span></span>
+                  </div>
+                  <p style="padding-top:10px;color:#666">示例：seo</p>
+                </div>
+
+                <span class="btn btn-link" style="display: none;" id="downJianShuArticle">下载</span>
+                <table class="table table-stripe table-striped table-bordered" style="font-size: 13px;">
+                  <thead>
+                    <tr>
+                      <th>文章标题</th>
+                      <th width="100">阅读数</th>
+                      <th width="100">评论数</th>
+                      <th width="100">点赞数</th>
+                      <th width="180">作者</th>
+                      <th width="180">时间</th>
+                    </tr>
+                  </thead>
+                  <tbody id="jianShuArticleBody">
+                    <tr>
+                      <td colspan="6" style="text-align:center;"><span style="color:#666">暂无数据</span></td>
+                    </tr>
+                  </tbody>
+                  <tfoot id="jianShuArticleFooter" style="display: none;">
+                    <tr>
+                      <td colspan="6" style="background: #f5f5f5;text-align: right;padding-right: 25px">总条数: <b>100</b>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+
+              <div class="sub-tab-content " style="display: none;">
+                <div>
+                  <div class="form-inline">
+                    <div class="form-group">
+                      地址:
+                      <input type="text" style="width:350px" autocomplete="off" id="jianShuArticleCommentsUrl"
+                        class="form-control">
+                    </div>
+                    <button class="btn btn-primary btn-sm" id="searchJianShuArticleComments">确定</button> <span
+                      style="margin-left:10px;color:#666;font-size: 14px;font-weight: bold;color:#f00;">请勿手动关闭弹出框<span></span>
+                  </div>
+                  <p style="padding-top:10px;color:#666">示例：https://www.jianshu.com/p/4ab25e25a140</p>
+                </div>
+
+                <span class="btn btn-link" style="display: none;" id="downJianShuArticleComments">下载</span>
+                <table class="table table-stripe table-striped table-bordered" style="font-size: 13px;">
+                  <thead>
+                    <tr>
+                      <th width="100">评论楼层</th>
+                      <th width="160">时间</th>
+                      <th>评论内容</th>
+                    </tr>
+                  </thead>
+                  <tbody id="jianShuArticleCommentsBody">
+                    <tr>
+                      <td colspan="3" style="text-align:center;"><span style="color:#666">暂无数据</span></td>
+                    </tr>
+                  </tbody>
+                  <tfoot id="jianShuArticleCommentsFooter" style="display: none;">
+                    <tr>
+                      <td colspan="3" style="background: #f5f5f5;text-align: right;padding-right: 25px">总条数: <b>100</b>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+
+              <div class="sub-tab-content " style="display: none;">
+                <div>
+                  <div class="form-inline">
+                    <div class="form-group">
+                      地址:
+                      <input type="text" style="width:350px" autocomplete="off" id="jianShuSpecialArticleUrl"
+                        class="form-control">
+                    </div>
+                    <button class="btn btn-primary btn-sm" id="searchJianShuSpecialArticle">确定</button> <span
+                      style="margin-left:10px;color:#666;font-size: 14px;font-weight: bold;color:#f00;">请勿手动关闭弹出框<span></span>
+                  </div>
+                  <p style="padding-top:10px;color:#666">示例：https://www.jianshu.com/c/3612ba73476b</p>
+                </div>
+
+                <span class="btn btn-link" style="display: none;" id="downJianShuSpecialArticle">下载</span>
+                <table class="table table-stripe table-striped table-bordered" style="font-size: 13px;">
+                  <thead>
+                    <tr>
+                      <th>文章标题</th>
+                      <th width="170">作者</th>
+                      <th width="100">评论数</th>
+                      <th width="100">点赞数</th>
+                      <th width="160">时间</th>
+                      <th width="100">文章字数</th>
+                      <th width="100">简书钻数目</th>
+                    </tr>
+                  </thead>
+                  <tbody id="jianShuSpecialArticleBody">
+                    <tr>
+                      <td colspan="7" style="text-align:center;"><span style="color:#666">暂无数据</span></td>
+                    </tr>
+                  </tbody>
+                  <tfoot id="jianShuSpecialArticleCommentsFooter" style="display: none;">
+                    <tr>
+                      <td colspan="7" style="background: #f5f5f5;text-align: right;padding-right: 25px">总条数: <b>100</b>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
+
+            <div id="jinritoutiao" class="source-container tab-parent" style="display: none;">
+              <ul class="nav nav-tabs ">
+                <li role="presentation" class="active"><a href="###">搜索结果</a></li>
+                <li role="presentation"><a href="###">某专题下所有文章</a></li>
+              </ul>
+              <div class="sub-tab-content ">
+                <div>
+                  <div class="form-inline">
+                    <div class="form-group">
+                      关键字:
+                      <input type="text" style="width:200px" autocomplete="off" id="jrttArticleUrl"
+                        class="form-control">
+                    </div>
+                    <button class="btn btn-primary btn-sm" id="searchJrttArticle">确定</button> <span
+                      style="margin-left:10px;color:#666;font-size: 14px;font-weight: bold;color:#f00;">请勿手动关闭弹出框<span></span>
+                  </div>
+                  <p style="padding-top:10px;color:#666">示例：写作</p>
+                </div>
+
+                <span class="btn btn-link" style="display: none;" id="downJrttArticle">下载</span>
+                <table class="table table-stripe table-striped table-bordered" style="font-size: 13px;">
+                  <thead>
+                    <tr>
+                      <th>文章标题</th>
+                      <th width="150">作者</th>
+                      <th width="100">评论数</th>
+                      <th width="100">时间</th>
+                    </tr>
+                  </thead>
+                  <tbody id="jrttArticleBody">
+                    <tr>
+                      <td colspan="4" style="text-align:center;"><span style="color:#666">暂无数据</span></td>
+                    </tr>
+                  </tbody>
+                  <tfoot id="jrttShuArticleFooter" style="display: none;">
+                    <tr>
+                      <td colspan="4" style="background: #f5f5f5;text-align: right;padding-right: 25px">总条数: <b>100</b>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+
+              <div class="sub-tab-content " style="display: none;">
+                <div>
+                  <div class="form-inline">
+                    <div class="form-group">
+                      地址:
+                      <input type="text" style="width:350px" autocomplete="off" id="jrttArticleCommentsUrl"
+                        class="form-control">
+                    </div>
+                    <button class="btn btn-primary btn-sm" id="searchJrttArticleComments">确定</button> <span
+                      style="margin-left:10px;color:#666;font-size: 14px;font-weight: bold;color:#f00;">请勿手动关闭弹出框<span></span>
+                  </div>
+                  <p style="padding-top:10px;color:#666">示例：https://www.toutiao.com/ch/news_tech/</p>
+                </div>
+
+                <span class="btn btn-link" style="display: none;" id="downJrttArticleComments">下载</span>
+                <table class="table table-stripe table-striped table-bordered" style="font-size: 13px;">
+                  <thead>
+                    <tr>
+                      <th>文章标题</th>
+                      <th width="160">作者</th>
+                      <th width="100">评论数</th>
+                      <th width="160">时间</th>
+                    </tr>
+                  </thead>
+                  <tbody id="jrtttArticleCommentsBody">
+                    <tr>
+                      <td colspan="4" style="text-align:center;"><span style="color:#666">暂无数据</span></td>
+                    </tr>
+                  </tbody>
+                  <tfoot id="jrttArticleCommentsFooter" style="display: none;">
+                    <tr>
+                      <td colspan="4" style="background: #f5f5f5;text-align: right;padding-right: 25px">总条数: <b>100</b>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
+
+            <div id="weibo" class="source-container tab-parent" style="display: none;">
+              <ul class="nav nav-tabs ">
+                <li role="presentation" class="active"><a href="###">搜索综合搜索信息结果</a></li>
+                <li role="presentation"><a href="###">搜索用户信息</a></li>
+              </ul>
+              <div class="sub-tab-content ">
+                <div>
+                  <div class="form-inline">
+                    <div class="form-group">
+                      关键字:
+                      <input type="text" style="width:200px" autocomplete="off" id="weiboKeyword" class="form-control">
+                    </div>
+                    <button class="btn btn-primary btn-sm" id="searchWeiboKeyword">确定</button> <span
+                      style="margin-left:10px;color:#666;font-size: 14px;font-weight: bold;color:#f00;">请勿手动关闭弹出框<span></span>
+                  </div>
+                  <p style="padding-top:10px;color:#666">示例：写作</p>
+                </div>
+
+                <span class="btn btn-link" style="display: none;" id="downWeiboKeywordExcel">下载</span>
+                <table class="table table-stripe table-striped table-bordered" style="font-size: 13px;">
+                  <thead>
+                    <tr>
+                      <th>微博内容</th>
+                      <th width="150">作者</th>
+                      <th width="100">转发数</th>
+                      <th width="100">评论数</th>
+                      <th width="100">喜欢数</th>
+                    </tr>
+                  </thead>
+                  <tbody id="weiboKeywordBody">
+                    <tr>
+                      <td colspan="5" style="text-align:center;"><span style="color:#666">暂无数据</span></td>
+                    </tr>
+                  </tbody>
+                  <tfoot id="weiboKeywordFooter" style="display: none;">
+                    <tr>
+                      <td colspan="5" style="background: #f5f5f5;text-align: right;padding-right: 25px">总条数: <b>100</b>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+
+              <div class="sub-tab-content " style="display: none;">
+                <div>
+                  <div class="form-inline">
+                    <div class="form-group">
+                      用户名称:
+                      <input type="text" style="width:200px" autocomplete="off" id="weiboUserName" class="form-control">
+                    </div>
+                    <button class="btn btn-primary btn-sm" id="searchWeiboUserName">确定</button> <span
+                      style="margin-left:10px;color:#666;font-size: 14px;font-weight: bold;color:#f00;">请勿手动关闭弹出框<span></span>
+                  </div>
+                  <p style="padding-top:10px;color:#666">示例：写作</p>
+                </div>
+
+                <span class="btn btn-link" style="display: none;" id="downWeiboUserNameExcel">下载</span>
+                <table class="table table-stripe table-striped table-bordered" style="font-size: 13px;">
+                  <thead>
+                    <tr>
+                      <th>用户名字</th>
+                      <th width="150">地址</th>
+                      <th width="100">关注大v数</th>
+                      <th width="100">粉丝数</th>
+                      <th width="100">发布微博数</th>
+                      <th width="400">简介</th>
+                      <th width="300">标签</th>
+                    </tr>
+                  </thead>
+                  <tbody id="weiboUserNameBody">
+                    <tr>
+                      <td colspan="7" style="text-align:center;"><span style="color:#666">暂无数据</span></td>
+                    </tr>
+                  </tbody>
+                  <tfoot id="weiboUserNameFooter" style="display: none;">
+                    <tr>
+                      <td colspan="7" style="background: #f5f5f5;text-align: right;padding-right: 25px">总条数: <b>100</b>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+
+            </div>
+
+            <div id="gongzhonghao" class="source-container tab-parent" style="display: none;">
+              <ul class="nav nav-tabs ">
+                <li role="presentation" class="active"><a href="###">公众号信息</a></li>
+              </ul>
+              <div class="sub-tab-content ">
+                <div>
+                  <div class="form-inline">
+                    <div class="form-group">
+                      关键字:
+                      <input type="text" style="width:200px" autocomplete="off" id="wxgzhKeyword" class="form-control">
+                    </div>
+                    <button class="btn btn-primary btn-sm" id="searchWxgzhKeyword">确定</button> <span
+                      style="margin-left:10px;color:#666;font-size: 14px;font-weight: bold;color:#f00;">请勿手动关闭弹出框<span></span>
+                  </div>
+                  <p style="padding-top:10px;color:#666">示例：写作</p>
+                </div>
+
+                <span class="btn btn-link" style="display: none;" id="downWxgzhKeywordExcel">下载</span>
+                <table class="table table-stripe table-striped table-bordered" style="font-size: 13px;">
+                  <thead>
+                    <tr>
+                      <th>公众号名字</th>
+                      <th width="320">公众号介绍</th>
+                      <th width="190">微信认证</th>
+                      <th width="260">微信id/发文频率</th>
+                      <th width="260">最近文章标题</th>
+                      <th width="140">最近文章发布时间</th>
+                    </tr>
+                  </thead>
+                  <tbody id="wxgzhKeywordBody">
+                    <tr>
+                      <td colspan="6" style="text-align:center;"><span style="color:#666">暂无数据</span></td>
+                    </tr>
+                  </tbody>
+                  <tfoot id="wxgzhKeywordFooter" style="display: none;">
+                    <tr>
+                      <td colspan="6" style="background: #f5f5f5;text-align: right;padding-right: 25px">总条数: <b>100</b>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
+
+            <div id="bzhan" class="source-container tab-parent" style="display: none;">
+              <ul class="nav nav-tabs ">
+                <li role="presentation" class="active"><a href="###">某用户所有视频</a></li>
+                <li role="presentation"><a href="###">搜索</a></li>
+              </ul>
+
+              <div class="sub-tab-content ">
+                <div>
+                  <div class="form-inline">
+                    <div class="form-group">
+                      地址:
+                      <input type="text" style="width:350px" autocomplete="off" id="bilibiliUserUrl"
+                        class="form-control">
+                    </div>
+                    <div class="form-group" style="padding:0 10px;">
+                      抓取第 1 页到
+                      <input type="text" style="margin: 0 5px;width:50px;text-align: center;" class="form-control"
+                        id="bilibiliUserPageEnd">
+                      页
+                    </div>
+                    <button class="btn btn-primary btn-sm" id="searchBilibiliUserUrl">确定</button> <span
+                      style="margin-left:10px;color:#666;font-size: 14px;font-weight: bold;color:#f00;">请勿手动关闭弹出框<span></span>
+                  </div>
+                  <p style="padding-top:10px;color:#666">示例：https://space.bilibili.com/258150656/video</p>
+                </div>
+
+                <span class="btn btn-link" style="display: none;" id="downBilibiliUserUrlExcel">下载</span>
+                <table class="table table-stripe table-striped table-bordered" style="font-size: 13px;">
+                  <thead>
+                    <tr>
+                      <th>视频标题</th>
+                      <th width="100">视频播放次数</th>
+                      <th width="120">时间</th>
+                      <th width="100">弹幕数</th>
+                      <th width="100">点赞数</th>
+                      <th width="100">硬币数</th>
+                      <th width="100">收藏数</th>
+                      <th width="100">分享数</th>
+                    </tr>
+                  </thead>
+                  <tbody id="bilibiliUserUrlBody">
+                    <tr>
+                      <td colspan="8" style="text-align:center;"><span style="color:#666">暂无数据</span></td>
+                    </tr>
+                  </tbody>
+                  <tfoot id="bilibiliUserUrlFooter" style="display: none;">
+                    <tr>
+                      <td colspan="8" style="background: #f5f5f5;text-align: right;padding-right: 25px">总条数: <b>100</b>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+
+              <div class="sub-tab-content " style="display: none;">
+                <div>
+                  <div class="form-inline">
+                    <div class="form-group">
+                      关键字:
+                      <input type="text" style="width:200px" autocomplete="off" id="bilibiliKeyword"
+                        class="form-control">
+                    </div>
+                    <button class="btn btn-primary btn-sm" id="searchBilibiliKeyword">确定</button> <span
+                      style="margin-left:10px;color:#666;font-size: 14px;font-weight: bold;color:#f00;">请勿手动关闭弹出框<span></span>
+                  </div>
+                  <p style="padding-top:10px;color:#666">示例：写作</p>
+                </div>
+
+                <span class="btn btn-link" style="display: none;" id="downBilibilKeywordExcel">下载</span>
+                <table class="table table-stripe table-striped table-bordered" style="font-size: 13px;">
+                  <thead>
+                    <tr>
+                      <th>视频标题</th>
+                      <th width="120">视频播放次数</th>
+                      <th width="120">时间</th>
+                      <th width="120">弹幕数</th>
+                      <th width="120">点赞数</th>
+                      <th width="120">硬币数</th>
+                      <th width="120">收藏数</th>
+                      <th width="120">分享数</th>
+                    </tr>
+                  </thead>
+                  <tbody id="bilibilKeywordBody">
+                    <tr>
+                      <td colspan="8" style="text-align:center;"><span style="color:#666">暂无数据</span></td>
+                    </tr>
+                  </tbody>
+                  <tfoot id="blibilKeywordFooter" style="display: none;">
+                    <tr>
+                      <td colspan="8" style="background: #f5f5f5;text-align: right;padding-right: 25px">总条数: <b>100</b>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
+
+            <div id="lizhiweike" class="source-container tab-parent" style="display: none;">
+              <ul class="nav nav-tabs ">
+                <li role="presentation" class="active"><a href="###">搜索结果</a></li>
+              </ul>
+
+              <div class="sub-tab-content ">
+                <div>
+                  <div class="form-inline">
+                    <div class="form-group">
+                      关键字:
+                      <input type="text" style="width:200px" autocomplete="off" id="lzwkKeyword" class="form-control">
+                    </div>
+                    <button class="btn btn-primary btn-sm" id="searchLZWKUrl">确定</button> <span
+                      style="margin-left:10px;color:#666;font-size: 14px;font-weight: bold;color:#f00;">请勿手动关闭弹出框<span></span>
+                  </div>
+                  <p style="padding-top:10px;color:#666">示例：赚钱</p>
+                </div>
+
+                <span class="btn btn-link" style="display: none;" id="downLzwkExcel">下载</span>
+                <table class="table table-stripe table-striped table-bordered" style="font-size: 13px;">
+                  <thead>
+                    <tr>
+                      <th>课程名字</th>
+                      <th width="150">课程热度人数</th>
+                      <th width="120">课程节数</th>
+                      <th width="160">价格（原价/现价） </th>
+                      <th width="300">课程简介</th>
+                    </tr>
+                  </thead>
+                  <tbody id="lzwkBody">
+                    <tr>
+                      <td colspan="5" style="text-align:center;"><span style="color:#666">暂无数据</span></td>
+                    </tr>
+                  </tbody>
+                  <tfoot id="lzwkFooter" style="display: none;">
+                    <tr>
+                      <td colspan="5" style="background: #f5f5f5;text-align: right;padding-right: 25px">总条数: <b>100</b>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
+
+            <div id="qianliao" class="source-container tab-parent" style="display: none;">
+              <ul class="nav nav-tabs ">
+                <li role="presentation" class="active"><a href="###">搜索结果</a></li>
+              </ul>
+
+              <div class="sub-tab-content ">
+                <div>
+                  <div class="form-inline">
+                    <div class="form-group">
+                      关键字:
+                      <input type="text" style="width:200px" autocomplete="off" id="qianliaoKeyword"
+                        class="form-control">
+                    </div>
+                    <button class="btn btn-primary btn-sm" id="searchQianliao">确定</button> <span
+                      style="margin-left:10px;color:#666;font-size: 14px;font-weight: bold;color:#f00;">请勿手动关闭弹出框<span></span>
+                  </div>
+                  <p style="padding-top:10px;color:#666">示例：赚钱</p>
+                </div>
+
+                <span class="btn btn-link" style="display: none;" id="downQianliaoExcel">下载</span>
+                <table class="table table-stripe table-striped table-bordered" style="font-size: 13px;">
+                  <thead>
+                    <tr>
+                      <th>课程名字</th>
+                      <th width="150">课程热度人数</th>
+                      <th width="120">课程节数</th>
+                      <th width="160">价格（原价/现价） </th>
+                      <!-- <th width="300">课程简介</th> -->
+                    </tr>
+                  </thead>
+                  <tbody id="qianliaoBody">
+                    <tr>
+                      <td colspan="4" style="text-align:center;"><span style="color:#666">暂无数据</span></td>
+                    </tr>
+                  </tbody>
+                  <tfoot id="qianliaoFooter" style="display: none;">
+                    <tr>
+                      <td colspan="4" style="background: #f5f5f5;text-align: right;padding-right: 25px">总条数: <b>100</b>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
+
+            <div id="youjiang" class="source-container tab-parent" style="display: none;">
+              <ul class="nav nav-tabs ">
+                <li role="presentation" class="active"><a href="###">搜索结果</a></li>
+                <li role="presentation"><a href="###">精品课信息</a></li>
+              </ul>
+
+              <div class="sub-tab-content ">
+                <div>
+                  <div class="form-inline">
+                    <div class="form-group">
+                      关键字:
+                      <input type="text" style="width:200px" autocomplete="off" id="youjiangKeyword"
+                        class="form-control">
+                    </div>
+                    <button class="btn btn-primary btn-sm" id="searchYoujiang">确定</button> <span
+                      style="margin-left:10px;color:#666;font-size: 14px;font-weight: bold;color:#f00;">请勿手动关闭弹出框<span></span>
+                  </div>
+                  <p style="padding-top:10px;color:#666">示例：赚钱</p>
+                </div>
+
+                <span class="btn btn-link" style="display: none;" id="downYoujiangExcel">下载</span>
+                <table class="table table-stripe table-striped table-bordered" style="font-size: 13px;">
+                  <thead>
+                    <tr>
+                      <th>课程名字</th>
+                      <th width="150">课程热度人数</th>
+                    </tr>
+                  </thead>
+                  <tbody id="youjiangBody">
+                    <tr>
+                      <td colspan="2" style="text-align:center;"><span style="color:#666">暂无数据</span></td>
+                    </tr>
+                  </tbody>
+                  <tfoot id="youjiangFooter" style="display: none;">
+                    <tr>
+                      <td colspan="2" style="background: #f5f5f5;text-align: right;padding-right: 25px">总条数: <b>100</b>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+
+              <div class="sub-tab-content " style="display: none;">
+                <div>
+                  <div class="form-inline">
+                    <div class="form-group">
+                      关键字:
+                      <input type="text" style="width:200px" autocomplete="off" id="youjiangLiveKeyword"
+                        class="form-control">
+                    </div>
+                    <button class="btn btn-primary btn-sm" id="searchYoujiangLive">确定</button> <span
+                      style="margin-left:10px;color:#666;font-size: 14px;font-weight: bold;color:#f00;">请勿手动关闭弹出框<span></span>
+                  </div>
+                  <p style="padding-top:10px;color:#666">示例：阅读</p>
+                </div>
+
+                <span class="btn btn-link" style="display: none;" id="downYoujiangLiveExcel">下载</span>
+                <table class="table table-stripe table-striped table-bordered" style="font-size: 13px;">
+                  <thead>
+                    <tr>
+                      <th>课程名字</th>
+                      <th width="150">课程热度人数</th>
+                      <th width="230">作者</th>
+                      <th width="180">课程节数</th>
+                    </tr>
+                  </thead>
+                  <tbody id="youjiangLiveBody">
+                    <tr>
+                      <td colspan="4" style="text-align:center;"><span style="color:#666">暂无数据</span></td>
+                    </tr>
+                  </tbody>
+                  <tfoot id="youjiangLiveFooter" style="display: none;">
+                    <tr>
+                      <td colspan="4" style="background: #f5f5f5;text-align: right;padding-right: 25px">总条数: <b>100</b>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
+
+            <div id="weiku" class="source-container tab-parent" style="display: none;">
+              <ul class="nav nav-tabs ">
+                <li role="presentation" class="active"><a href="###">训练营</a></li>
+                <li role="presentation"><a href="###">课程搜索</a></li>
+              </ul>
+
+              <div class="sub-tab-content ">
+                <div>
+                  <div class="form-inline">
+                    <div class="form-group">
+                      地址:
+                      <input type="text" style="width:350px" autocomplete="off" id="wkxlyKeyword" class="form-control">
+                    </div>
+                    <button class="btn btn-primary btn-sm" id="searchWkxly">确定</button> <span
+                      style="margin-left:10px;color:#666;font-size: 14px;font-weight: bold;color:#f00;">请勿手动关闭弹出框<span></span>
+                  </div>
+                  <p style="padding-top:10px;color:#666">示例：http://www.yojiang.cn/pc/training-camp</p>
+                </div>
+
+                <span class="btn btn-link" style="display: none;" id="downWkxlyExcel">下载</span>
+                <table class="table table-stripe table-striped table-bordered" style="font-size: 13px;">
+                  <thead>
+                    <tr>
+                      <th>训练营名字</th>
+                      <th width="150">开营时间</th>
+                      <th width="100">价格</th>
+                      <th width="200">作者介绍</th>
+                      <th width="100">课时</th>
+                      <th width="150">在学人数</th>
+                    </tr>
+                  </thead>
+                  <tbody id="wkxlyBody">
+                    <tr>
+                      <td colspan="6" style="text-align:center;"><span style="color:#666">暂无数据</span></td>
+                    </tr>
+                  </tbody>
+                  <tfoot id="wkxlyFooter" style="display: none;">
+                    <tr>
+                      <td colspan="6" style="background: #f5f5f5;text-align: right;padding-right: 25px">总条数: <b>100</b>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+
+              <div class="sub-tab-content " style="display: none;">
+                <div>
+                  <div class="form-inline">
+                    <div class="form-group">
+                      关键字:
+                      <input type="text" style="width:350px" autocomplete="off" id="wkKeyword" class="form-control">
+                    </div>
+                    <button class="btn btn-primary btn-sm" id="searchWk">确定</button> <span
+                      style="margin-left:10px;color:#666;font-size: 14px;font-weight: bold;color:#f00;">请勿手动关闭弹出框<span></span>
+                  </div>
+                  <p style="padding-top:10px;color:#666">示例：赚钱</p>
+                </div>
+
+                <span class="btn btn-link" style="display: none;" id="downWkExcel">下载</span>
+                <table class="table table-stripe table-striped table-bordered" style="font-size: 13px;">
+                  <thead>
+                    <tr>
+                      <th>课程名字</th>
+                      <th width="260">作者</th>
+                      <th width="100">课程节数</th>
+                      <th width="200">在学人数</th>
+                      <th width="150">价格（原价/现价）</th>
+                    </tr>
+                  </thead>
+                  <tbody id="wkBody">
+                    <tr>
+                      <td colspan="5" style="text-align:center;"><span style="color:#666">暂无数据</span></td>
+                    </tr>
+                  </tbody>
+                  <tfoot id="wkFooter" style="display: none;">
+                    <tr>
+                      <td colspan="5" style="background: #f5f5f5;text-align: right;padding-right: 25px">总条数: <b>100</b>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
+
+            <div id="wykt" class="source-container tab-parent" style="display: none;">
+              <ul class="nav nav-tabs ">
+                <li role="presentation" class="active"><a href="###">搜索</a></li>
+              </ul>
+              <div class="sub-tab-content ">
+                <div>
+                  <div class="form-inline">
+                    <div class="form-group">
+                      关键字:
+                      <input type="text" style="width:200px" autocomplete="off" id="wxktyKeyword" class="form-control">
+                    </div>
+                    <button class="btn btn-primary btn-sm" id="searchWykt">确定</button> <span
+                      style="margin-left:10px;color:#666;font-size: 14px;font-weight: bold;color:#f00;">请勿手动关闭弹出框<span></span>
+                  </div>
+                  <p style="padding-top:10px;color:#666">示例：赚钱</p>
+                </div>
+
+                <span class="btn btn-link" style="display: none;" id="downWyktExcel">下载</span>
+                <table class="table table-stripe table-striped table-bordered" style="font-size: 13px;">
+                  <thead>
+                    <tr>
+                      <th>课程名字</th>
+                      <th width="150">价格</th>
+                      <th width="100">课程人数</th>
+                      <th width="200">作者</th>
+                      <th width="400">课程简介</th>
+                    </tr>
+                  </thead>
+                  <tbody id="wyktBody">
+                    <tr>
+                      <td colspan="5" style="text-align:center;"><span style="color:#666">暂无数据</span></td>
+                    </tr>
+                  </tbody>
+                  <tfoot id="wyktFooter" style="display: none;">
+                    <tr>
+                      <td colspan="5" style="background: #f5f5f5;text-align: right;padding-right: 25px">总条数: <b>100</b>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
+
+            <div id="txkt" class="source-container tab-parent" style="display: none;">
+              <ul class="nav nav-tabs ">
+                <li role="presentation" class="active"><a href="###">搜索</a></li>
+              </ul>
+
+              <div class="sub-tab-content ">
+                <div>
+                  <div class="form-inline">
+                    <div class="form-group">
+                      关键字:
+                      <input type="text" style="width:200px" autocomplete="off" id="txktKeyword" class="form-control">
+                    </div>
+                    <button class="btn btn-primary btn-sm" id="searchTxkt">确定</button> <span
+                      style="margin-left:10px;color:#666;font-size: 14px;font-weight: bold;color:#f00;">请勿手动关闭弹出框<span></span>
+                  </div>
+                  <p style="padding-top:10px;color:#666">示例：赚钱</p>
+                </div>
+
+                <span class="btn btn-link" style="display: none;" id="downTxktExcel">下载</span>
+                <table class="table table-stripe table-striped table-bordered" style="font-size: 13px;">
+                  <thead>
+                    <tr>
+                      <th>课程名字</th>
+                      <th width="150">价格</th>
+                      <th width="150">课程人数</th>
+                      <th width="150">作者</th>
+                      <th width="300">课程标签</th>
+                    </tr>
+                  </thead>
+                  <tbody id="txktBody">
+                    <tr>
+                      <td colspan="5" style="text-align:center;"><span style="color:#666">暂无数据</span></td>
+                    </tr>
+                  </tbody>
+                  <tfoot id="txktFooter" style="display: none;">
+                    <tr>
+                      <td colspan="5" style="background: #f5f5f5;text-align: right;padding-right: 25px">总条数: <b>100</b>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
+            <div id="dedao" class="source-container tab-parent"></div>
+
+            <div id="ximalaya" class="source-container tab-parent" style="display: none;">
+              <ul class="nav nav-tabs ">
+                <li role="presentation" class="active"><a href="###">专辑搜索</a></li>
+                <li role="presentation"><a href="###">主播搜索</a></li>
+              </ul>
+              <div class="sub-tab-content ">
+                <div>
+                  <div class="form-inline">
+                    <div class="form-group">
+                      关键字:
+                      <input type="text" style="width:200px" autocomplete="off" id="xmlyKeyword" class="form-control">
+                    </div>
+                    <button class="btn btn-primary btn-sm" id="searchXmly">确定</button> <span
+                      style="margin-left:10px;color:#666;font-size: 14px;font-weight: bold;color:#f00;">请勿手动关闭弹出框<span></span>
+                  </div>
+                  <p style="padding-top:10px;color:#666">示例：赚钱</p>
+                </div>
+
+                <span class="btn btn-link" style="display: none;" id="downXmlaExcel">下载</span>
+                <table class="table table-stripe table-striped table-bordered" style="font-size: 13px;">
+                  <thead>
+                    <tr>
+                      <th>专辑名字</th>
+                      <th width="150">作者</th>
+                      <th width="150">更新时间</th>
+                      <th width="150">收听数</th>
+                      <th width="100">价格</th>
+                      <th width="350">专辑目录</th>
+                      <th width="360">简介</th>
+                    </tr>
+                  </thead>
+                  <tbody id="xmlyBody">
+                    <tr>
+                      <td colspan="7" style="text-align:center;"><span style="color:#666">暂无数据</span></td>
+                    </tr>
+                  </tbody>
+                  <tfoot id="xmlyFooter" style="display: none;">
+                    <tr>
+                      <td colspan="7" style="background: #f5f5f5;text-align: right;padding-right: 25px">总条数: <b>100</b>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+
+              <div class="sub-tab-content " style="display: none;">
+                <div>
+                  <div class="form-inline">
+                    <div class="form-group">
+                      关键字:
+                      <input type="text" style="width:200px" autocomplete="off" id="xmlyzbKeyword" class="form-control">
+                    </div>
+                    <button class="btn btn-primary btn-sm" id="searchXmlyzb">确定</button> <span
+                      style="margin-left:10px;color:#666;font-size: 14px;font-weight: bold;color:#f00;">请勿手动关闭弹出框<span></span>
+                  </div>
+                  <p style="padding-top:10px;color:#666">示例：赚钱</p>
+                </div>
+
+                <span class="btn btn-link" style="display: none;" id="downXmlazbExcel">下载</span>
+                <table class="table table-stripe table-striped table-bordered" style="font-size: 13px;">
+                  <thead>
+                    <tr>
+                      <th>主播名字</th>
+                      <th width="100">发布的声音数</th>
+                      <th width="100">专辑数</th>
+                      <th width="100">他关注的人</th>
+                      <th width="100">粉丝数</th>
+                    </tr>
+                  </thead>
+                  <tbody id="xmlyzbBody">
+                    <tr>
+                      <td colspan="5" style="text-align:center;"><span style="color:#666">暂无数据</span></td>
+                    </tr>
+                  </tbody>
+                  <tfoot id="xmlyzbFooter" style="display: none;">
+                    <tr>
+                      <td colspan="5" style="background: #f5f5f5;text-align: right;padding-right: 25px">总条数: <b>100</b>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
+            <div id="zaixing" class="source-container tab-parent" style="display: none;">
+              <ul class="nav nav-tabs ">
+                <li role="presentation" class="active"><a href="###">搜索</a></li>
+              </ul>
+              <div class="sub-tab-content ">
+                <div>
+                  <div class="form-inline">
+                    <div class="form-group">
+                      关键字:
+                      <input type="text" style="width:200px" autocomplete="off" id="zaixingKeyword"
+                        class="form-control">
+                    </div>
+                    <button class="btn btn-primary btn-sm" id="searchZaixing">确定</button> <span
+                      style="margin-left:10px;color:#666;font-size: 14px;font-weight: bold;color:#f00;">请勿手动关闭弹出框<span></span>
+                  </div>
+                  <p style="padding-top:10px;color:#666">示例：赚钱</p>
+                </div>
+
+                <span class="btn btn-link" style="display: none;" id="downZaixingExcel">下载</span>
+                <table class="table table-stripe table-striped table-bordered" style="font-size: 13px;">
+                  <thead>
+                    <tr>
+                      <th width="200">行家名字</th>
+                      <th width="150">行家地址</th>
+                      <th width="260">行家头衔</th>
+                      <th width="100">话题最低价格</th>
+                      <th>话题介绍</th>
+                      <th width="150">行家约见用户数</th>
+                      <th width="100">行家评分</th>
+                    </tr>
+                  </thead>
+                  <tbody id="zaixingBody">
+                    <tr>
+                      <td colspan="7" style="text-align:center;"><span style="color:#666">暂无数据</span></td>
+                    </tr>
+                  </tbody>
+                  <tfoot id="zaixingFooter" style="display: none;">
+                    <tr>
+                      <td colspan="7" style="background: #f5f5f5;text-align: right;padding-right: 25px">总条数: <b>100</b>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
+
+            <div id="taobao" class="source-container tab-parent" style="display: none;">
+              <ul class="nav nav-tabs ">
+                <li role="presentation" class="active"><a href="###">商品搜索</a></li>
+              </ul>
+              <div class="sub-tab-content ">
+                <div>
+                  <div class="form-inline">
+                    <div class="form-group">
+                      关键字:
+                      <input type="text" style="width:200px" autocomplete="off" id="taobaoKeyword" class="form-control">
+                    </div>
+                    <button class="btn btn-primary btn-sm" id="searchTaobao">确定</button> <span
+                      style="margin-left:10px;color:#666;font-size: 14px;font-weight: bold;color:#f00;">请勿手动关闭弹出框<span></span>
+                  </div>
+                  <p style="padding-top:10px;color:#666">示例：酸奶</p>
+                </div>
+
+                <span class="btn btn-link" style="display: none;" id="downTaobaoExcel">下载</span>
+                <table class="table table-stripe table-striped table-bordered" style="font-size: 13px;">
+                  <thead>
+                    <tr>
+                      <th>商品名字</th>
+                      <th width="150">店铺名字</th>
+                      <th width="200">发货地点</th>
+                      <th width="100">价格</th>
+                      <th width="100">销量</th>
+                    </tr>
+                  </thead>
+                  <tbody id="taobaoBody">
+                    <tr>
+                      <td colspan="5" style="text-align:center;"><span style="color:#666">暂无数据</span></td>
+                    </tr>
+                  </tbody>
+                  <tfoot id="taobaoFooter" style="display: none;">
+                    <tr>
+                      <td colspan="5" style="background: #f5f5f5;text-align: right;padding-right: 25px">总条数: <b>100</b>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
+
+            <div id="jingdong" class="source-container tab-parent" style="display: none;">
+              <ul class="nav nav-tabs ">
+                <li role="presentation" class="active"><a href="###">商品搜索</a></li>
+              </ul>
+              <div class="sub-tab-content ">
+                <div>
+                  <div class="form-inline">
+                    <div class="form-group">
+                      关键字:
+                      <input type="text" style="width:200px" autocomplete="off" id="jingdongKeyword"
+                        class="form-control">
+                    </div>
+                    <button class="btn btn-primary btn-sm" id="searchJingdong">确定</button> <span
+                      style="margin-left:10px;color:#666;font-size: 14px;font-weight: bold;color:#f00;">请勿手动关闭弹出框<span></span>
+                  </div>
+                  <p style="padding-top:10px;color:#666">示例：iphone11</p>
+                </div>
+
+                <span class="btn btn-link" style="display: none;" id="downJingdongExcel">下载</span>
+                <table class="table table-stripe table-striped table-bordered" style="font-size: 13px;">
+                  <thead>
+                    <tr>
+                      <th>商品名字</th>
+                      <th width="150">价格</th>
+                      <th width="200">评价数</th>
+                      <th width="200">店铺名字</th>
+                    </tr>
+                  </thead>
+                  <tbody id="jingdongBody">
+                    <tr>
+                      <td colspan="4" style="text-align:center;"><span style="color:#666">暂无数据</span></td>
+                    </tr>
+                  </tbody>
+                  <tfoot id="jingdongFooter" style="display: none;">
+                    <tr>
+                      <td colspan="4" style="background: #f5f5f5;text-align: right;padding-right: 25px">总条数: <b>100</b>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
+
+            <div id="dangdang" class="source-container tab-parent" style="display: none;">
+              <ul class="nav nav-tabs ">
+                <li role="presentation" class="active"><a href="###">搜索结果</a></li>
+              </ul>
+              <div class="sub-tab-content ">
+                <div>
+                  <div class="form-inline">
+                    <div class="form-group">
+                      关键字:
+                      <input type="text" style="width:200px" autocomplete="off" id="dangdangKeyword"
+                        class="form-control">
+                    </div>
+                    <button class="btn btn-primary btn-sm" id="searchDangdang">确定</button> <span
+                      style="margin-left:10px;color:#666;font-size: 14px;font-weight: bold;color:#f00;">请勿手动关闭弹出框<span></span>
+                  </div>
+                  <p style="padding-top:10px;color:#666">示例：赚钱</p>
+                </div>
+
+                <span class="btn btn-link" style="display: none;" id="downDangdangExcel">下载</span>
+                <table class="table table-stripe table-striped table-bordered" style="font-size: 13px;">
+                  <thead>
+                    <tr>
+                      <th>商品名字</th>
+                      <th width="100">商品价格</th>
+                      <th width="100">电子商品价格</th>
+                      <th width="200">作者</th>
+                      <th width="120">评论数</th>
+                      <th width="360">简介</th>
+                    </tr>
+                  </thead>
+                  <tbody id="dangDangBody">
+                    <tr>
+                      <td colspan="6" style="text-align:center;"><span style="color:#666">暂无数据</span></td>
+                    </tr>
+                  </tbody>
+                  <tfoot id="dangDangFooter" style="display: none;">
+                    <tr>
+                      <td colspan="6" style="background: #f5f5f5;text-align: right;padding-right: 25px">总条数: <b>100</b>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
+
+            <div id="i1688" class="source-container tab-parent" style="display: none;">
+              <ul class="nav nav-tabs ">
+                <li role="presentation" class="active"><a href="###">搜索结果</a></li>
+              </ul>
+              <div class="sub-tab-content ">
+                <div>
+                  <div class="form-inline">
+                    <div class="form-group">
+                      关键字:
+                      <input type="text" style="width:200px" autocomplete="off" id="i1688Keyword" class="form-control">
+                    </div>
+                    <button class="btn btn-primary btn-sm" id="searchI1688">确定</button> <span
+                      style="margin-left:10px;color:#666;font-size: 14px;font-weight: bold;color:#f00;">请勿手动关闭弹出框<span></span>
+                  </div>
+                  <p style="padding-top:10px;color:#666">示例：台灯</p>
+                </div>
+
+                <span class="btn btn-link" style="display: none;" id="downI1688Excel">下载</span>
+                <table class="table table-stripe table-striped table-bordered" style="font-size: 13px;">
+                  <thead>
+                    <tr>
+                      <th>商品名字</th>
+                      <th width="100">商品标签</th>
+                      <th width="100">商品价格</th>
+                      <th width="100">起批量</th>
+                      <th width="150">所在地区</th>
+                      <th width="100">快递费</th>
+                      <th width="150">店铺名字</th>
+                      <th width="100">卖家名字</th>
+                      <th width="100">货描率</th>
+                      <th width="100">响应率</th>
+                      <th width="100">发货率</th>
+                      <th width="100">回头率</th>
+                    </tr>
+                  </thead>
+                  <tbody id="i1688Body">
+                    <tr>
+                      <td colspan="12" style="text-align:center;"><span style="color:#666">暂无数据</span></td>
+                    </tr>
+                  </tbody>
+                  <tfoot id="i1688Footer" style="display: none;">
+                    <tr>
+                      <td colspan="12" style="background: #f5f5f5;text-align: right;padding-right: 25px">总条数: <b>100</b>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
+
+            <div id="yamaxun" class="source-container tab-parent" style="display: none;">
+              <ul class="nav nav-tabs ">
+                <li role="presentation" class="active"><a href="###">亚马逊中国书籍搜索</a></li>
+                <li role="presentation"><a href="###">亚马逊中国商品搜索</a></li>
+                <li role="presentation"><a href="###">amazon.com商品搜索</a></li>
+                <li role="presentation"><a href="###">amazon.com best sellers</a></li>
+              </ul>
+              <div class="sub-tab-content ">
+                <div>
+                  <div class="form-inline">
+                    <div class="form-group">
+                      关键字:
+                      <input type="text" style="width:200px" autocomplete="off" id="yamaxunKeyword"
+                        class="form-control">
+                    </div>
+                    <button class="btn btn-primary btn-sm" id="searchYamaxun">确定</button> <span
+                      style="margin-left:10px;color:#666;font-size: 14px;font-weight: bold;color:#f00;">请勿手动关闭弹出框<span></span>
+                  </div>
+                  <p style="padding-top:10px;color:#666">示例：写作</p>
+                </div>
+
+                <span class="btn btn-link" style="display: none;" id="downYamaxunExcel">下载</span>
+                <table class="table table-stripe table-striped table-bordered" style="font-size: 13px;">
+                  <thead>
+                    <tr>
+                      <th>书籍名字</th>
+                      <th width="180">作者</th>
+                      <th width="100">评分</th>
+                      <th width="100">价格</th>
+                    </tr>
+                  </thead>
+                  <tbody id="yamaxunBody">
+                    <tr>
+                      <td colspan="4" style="text-align:center;"><span style="color:#666">暂无数据</span></td>
+                    </tr>
+                  </tbody>
+                  <tfoot id="yamaxunFooter" style="display: none;">
+                    <tr>
+                      <td colspan="4" style="background: #f5f5f5;text-align: right;padding-right: 25px">总条数: <b>100</b>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+              <div class="sub-tab-content " style="display: none;">
+                <div>
+                  <div class="form-inline">
+                    <div class="form-group">
+                      关键字:
+                      <input type="text" style="width:200px" autocomplete="off" id="yamaxunGoodsKeyword"
+                        class="form-control">
+                    </div>
+                    <button class="btn btn-primary btn-sm" id="searchYamaxunGoods">确定</button> <span
+                      style="margin-left:10px;color:#666;font-size: 14px;font-weight: bold;color:#f00;">请勿手动关闭弹出框<span></span>
+                  </div>
+                  <p style="padding-top:10px;color:#666">示例：写作</p>
+                </div>
+
+                <span class="btn btn-link" style="display: none;" id="downYamaxunGoodsExcel">下载</span>
+                <table class="table table-stripe table-striped table-bordered" style="font-size: 13px;">
+                  <thead>
+                    <tr>
+                      <th>商品名字</th>
+                      <th width="100">评分</th>
+                      <th width="100">价格</th>
+                    </tr>
+                  </thead>
+                  <tbody id="yamaxunGoodsBody">
+                    <tr>
+                      <td colspan="3" style="text-align:center;"><span style="color:#666">暂无数据</span></td>
+                    </tr>
+                  </tbody>
+                  <tfoot id="yamaxunGoodsFooter" style="display: none;">
+                    <tr>
+                      <td colspan="3" style="background: #f5f5f5;text-align: right;padding-right: 25px">总条数: <b>100</b>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+              <div class="sub-tab-content " style="display: none;">
+                <div>
+                  <div class="form-inline">
+                    <div class="form-group">
+                      关键字:
+                      <input type="text" style="width:200px" autocomplete="off" id="amazonGoodsKeyword"
+                        class="form-control">
+                    </div>
+                    <button class="btn btn-primary btn-sm" id="searchAmazonGoods">确定</button> <span
+                      style="margin-left:10px;color:#666;font-size: 14px;font-weight: bold;color:#f00;">请勿手动关闭弹出框<span></span>
+                  </div>
+                  <p style="padding-top:10px;color:#666">示例：iphone 11</p>
+                </div>
+
+                <span class="btn btn-link" style="display: none;" id="downAmazonGoodsExcel">下载</span>
+                <table class="table table-stripe table-striped table-bordered" style="font-size: 13px;">
+                  <thead>
+                    <tr>
+                      <th>商品名字</th>
+                      <th width="100">评分</th>
+                      <th width="100">价格</th>
+                      <th width="100">原价</th>
+                      <th width="100">prime特权</th>
+                      <th width="100">shipping</th>
+                      <th width="130">是否 sponsored</th>
+                    </tr>
+                  </thead>
+                  <tbody id="amazonGoodsBody">
+                    <tr>
+                      <td colspan="7" style="text-align:center;"><span style="color:#666">暂无数据</span></td>
+                    </tr>
+                  </tbody>
+                  <tfoot id="amazonGoodsFooter" style="display: none;">
+                    <tr>
+                      <td colspan="7" style="background: #f5f5f5;text-align: right;padding-right: 25px">总条数: <b>100</b>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+
+              <div class="sub-tab-content " style="display: none;">
+                <div>
+                  <div class="form-inline">
+                    <!-- <div class="form-group">
+                      关键字:
+                      <input type="text" style="width:200px" autocomplete="off" id="amazonBestsellersKeyword"
+                        class="form-control">
+                    </div> -->
+                    <button class="btn btn-primary btn-sm" id="searchAmazonBestsellers">确定</button> <span
+                      style="margin-left:10px;color:#666;font-size: 14px;font-weight: bold;color:#f00;">请勿手动关闭弹出框<span></span>
+                  </div>
+                  <p></p>
+                  <!-- <p style="padding-top:10px;color:#666">示例：iphone 11</p> -->
+                </div>
+
+                <span class="btn btn-link" style="display: none;" id="downAmazonBestsellersExcel">下载</span>
+                <table class="table table-stripe table-striped table-bordered" style="font-size: 13px;">
+                  <thead>
+                    <tr>
+                      <th>商品名字</th>
+                      <th width="180">商品评分</th>
+                      <th width="120">价格</th>
+                    </tr>
+                  </thead>
+                  <tbody id="bestsellersBody">
+                    <tr>
+                      <td colspan="3" style="text-align:center;"><span style="color:#666">暂无数据</span></td>
+                    </tr>
+                  </tbody>
+                  <tfoot id="bestsellersFooter" style="display: none;">
+                    <tr>
+                      <td colspan="3" style="background: #f5f5f5;text-align: right;padding-right: 25px">总条数: <b>100</b>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
+
+            <div id="aliguoji" class="source-container tab-parent" style="display: none;">
+              <ul class="nav nav-tabs ">
+                <li role="presentation" class="active"><a href="###">商品搜索</a></li>
+              </ul>
+              <div class="sub-tab-content ">
+                <div>
+                  <div class="form-inline">
+                    <div class="form-group">
+                      关键字:
+                      <input type="text" style="width:200px" autocomplete="off" id="aliguojiKeyword"
+                        class="form-control">
+                    </div>
+                    <button class="btn btn-primary btn-sm" id="searchAliguoji">确定</button> <span
+                      style="margin-left:10px;color:#666;font-size: 14px;font-weight: bold;color:#f00;">请勿手动关闭弹出框<span></span>
+                  </div>
+                  <p style="padding-top:10px;color:#666">示例：reverse_osmosis_plant</p>
+                </div>
+
+                <span class="btn btn-link" style="display: none;" id="downAliguojiExcel">下载</span>
+                <table class="table table-stripe table-striped table-bordered" style="font-size: 13px;">
+                  <thead>
+                    <tr>
+                      <th>商品名字</th>
+                      <th width="180">价格</th>
+                      <th width="300">地址</th>
+                      <th width="300">回应率/销量/评分</th>
+                    </tr>
+                  </thead>
+                  <tbody id="aliguojiBody">
+                    <tr>
+                      <td colspan="4" style="text-align:center;"><span style="color:#666">暂无数据</span></td>
+                    </tr>
+                  </tbody>
+                  <tfoot id="aliguojiFooter" style="display: none;">
+                    <tr>
+                      <td colspan="4" style="background: #f5f5f5;text-align: right;padding-right: 25px">总条数: <b>100</b>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
+
+            <div id="xiapi" class="source-container tab-parent" style="display: none;">
+              <ul class="nav nav-tabs ">
+                <li role="presentation" class="active"><a href="###">商品搜索</a></li>
+              </ul>
+              <div class="sub-tab-content ">
+                <div>
+                  <div class="form-inline">
+                    <div class="form-group">
+                      关键字:
+                      <input type="text" style="width:200px" autocomplete="off" id="xiapiKeyword" class="form-control">
+                    </div>
+                    <button class="btn btn-primary btn-sm" id="searchXiapi">确定</button> <span
+                      style="margin-left:10px;color:#666;font-size: 14px;font-weight: bold;color:#f00;">请勿手动关闭弹出框<span></span>
+                  </div>
+                  <p style="padding-top:10px;color:#666">示例：手机</p>
+                </div>
+
+                <span class="btn btn-link" style="display: none;" id="downXiapiExcel">下载</span>
+                <table class="table table-stripe table-striped table-bordered" style="font-size: 13px;">
+                  <thead>
+                    <tr>
+                      <th>商品名字</th>
+                      <th width="100">价格</th>
+                      <th width="100">销量</th>
+                      <th width="300">地址</th>
+                    </tr>
+                  </thead>
+                  <tbody id="xiapiBody">
+                    <tr>
+                      <td colspan="4" style="text-align:center;"><span style="color:#666">暂无数据</span></td>
+                    </tr>
+                  </tbody>
+                  <tfoot id="xiapiFooter" style="display: none;">
+                    <tr>
+                      <td colspan="4" style="background: #f5f5f5;text-align: right;padding-right: 25px">总条数: <b>100</b>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
+
+            <div id="sumaitong" class="source-container tab-parent" style="display: none;">
+              <ul class="nav nav-tabs ">
+                <li role="presentation" class="active"><a href="###">商品搜索</a></li>
+              </ul>
+              <div class="sub-tab-content ">
+                <div>
+                  <div class="form-inline">
+                    <div class="form-group">
+                      关键字:
+                      <input type="text" style="width:200px" autocomplete="off" id="sumaitongKeyword"
+                        class="form-control">
+                    </div>
+                    <button class="btn btn-primary btn-sm" id="searchSumaitong">确定</button> <span
+                      style="margin-left:10px;color:#666;font-size: 14px;font-weight: bold;color:#f00;">请勿手动关闭弹出框<span></span>
+                  </div>
+                  <p style="padding-top:10px;color:#666">示例：iphone</p>
+                </div>
+
+                <span class="btn btn-link" style="display: none;" id="downSumaitongExcel">下载</span>
+                <table class="table table-stripe table-striped table-bordered" style="font-size: 13px;">
+                  <thead>
+                    <tr>
+                      <th>商品名字</th>
+                      <th width="200">价格</th>
+                      <th width="230">店铺名字</th>
+                      <th width="100">评分</th>
+                      <th width="100">订单数</th>
+                      <th width="120">商品主图</th>
+                    </tr>
+                  </thead>
+                  <tbody id="sumaitongBody">
+                    <tr>
+                      <td colspan="6" style="text-align:center;"><span style="color:#666">暂无数据</span></td>
+                    </tr>
+                  </tbody>
+                  <tfoot id="sumaitongFooter" style="display: none;">
+                    <tr>
+                      <td colspan="6" style="background: #f5f5f5;text-align: right;padding-right: 25px">总条数: <b>100</b>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
+
+            <div id="meituan" class="source-container tab-parent" style="display: none;">
+              <ul class="nav nav-tabs ">
+                <li role="presentation" class="active"><a href="###">搜索结果</a></li>
+              </ul>
+              <div class="sub-tab-content ">
+                <div>
+                  <div class="form-inline">
+                    <div class="form-group">
+                      关键字:
+                      <input type="text" style="width:200px" autocomplete="off" id="meituanKeyword"
+                        class="form-control">
+                    </div>
+                    <button class="btn btn-primary btn-sm" id="searchMeituan">确定</button> <span
+                      style="margin-left:10px;color:#666;font-size: 14px;font-weight: bold;color:#f00;">请勿手动关闭弹出框<span></span>
+                  </div>
+                  <p style="padding-top:10px;color:#666">示例：火锅</p>
+                </div>
+
+                <span class="btn btn-link" style="display: none;" id="downMeituanExcel">下载</span>
+                <table class="table table-stripe table-striped table-bordered" style="font-size: 13px;">
+                  <thead>
+                    <tr>
+                      <th>店铺名字</th>
+                      <th width="100">评分</th>
+                      <th width="100">评论数</th>
+                      <th width="300">地址</th>
+                      <th width="100">价格</th>
+                      <th width="150">电话</th>
+                    </tr>
+                  </thead>
+                  <tbody id="meituanBody">
+                    <tr>
+                      <td colspan="6" style="text-align:center;"><span style="color:#666">暂无数据</span></td>
+                    </tr>
+                  </tbody>
+                  <tfoot id="meituanFooter" style="display: none;">
+                    <tr>
+                      <td colspan="6" style="background: #f5f5f5;text-align: right;padding-right: 25px">总条数: <b>100</b>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
+
+            <div id="ganjiwang" class="source-container tab-parent" style="display: none;">
+              <ul class="nav nav-tabs ">
+                <li role="presentation" class="active"><a href="###">租房</a></li>
+              </ul>
+              <div class="sub-tab-content ">
+                <div>
+                  <div class="form-inline">
+                    <!-- <div class="form-group">
+                      关键字:
+                      <input type="text" style="width:200px" autocomplete="off" id="ganjiwangKeyword"
+                        class="form-control">
+                    </div> -->
+                    <button class="btn btn-primary btn-sm" id="searchGanjiwang">确定</button> <span
+                      style="margin-left:10px;color:#666;font-size: 14px;font-weight: bold;color:#f00;">请勿手动关闭弹出框<span></span>
+                  </div>
+                  <p></p>
+                  <!-- <p style="padding-top:10px;color:#666">示例：火锅</p> -->
+                </div>
+
+                <span class="btn btn-link" style="display: none;" id="downGanjiwangExcel">下载</span>
+                <table class="table table-stripe table-striped table-bordered" style="font-size: 13px;">
+                  <thead>
+                    <tr>
+                      <th>房间标题</th>
+                      <th width="200">房间类型</th>
+                      <th width="200">地址</th>
+                      <th width="200">房间来源</th>
+                      <th width="200">地铁</th>
+                      <th width="100">价格</th>
+                      <th width="230">房间详细来源</th>
+                      <th width="120">电话</th>
+                    </tr>
+                  </thead>
+                  <tbody id="ganjiwangBody">
+                    <tr>
+                      <td colspan="8" style="text-align:center;"><span style="color:#666">暂无数据</span></td>
+                    </tr>
+                  </tbody>
+                  <tfoot id="ganjiwangFooter" style="display: none;">
+                    <tr>
+                      <td colspan="8" style="background: #f5f5f5;text-align: right;padding-right: 25px">总条数: <b>100</b>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
+
+            <div id="zhilianzhaopin" class="source-container tab-parent" style="display: none;">
+              <ul class="nav nav-tabs ">
+                <li role="presentation" class="active"><a href="###">租房</a></li>
+              </ul>
+              <div class="sub-tab-content ">
+                <div>
+                  <div class="form-inline">
+                    <div class="form-group">
+                      关键字:
+                      <input type="text" style="width:200px" autocomplete="off" id="zhilianzhaopinKeyword"
+                        class="form-control">
+                    </div>
+                    <button class="btn btn-primary btn-sm" id="searchZhilianzhaopin">确定</button> <span
+                      style="margin-left:10px;color:#666;font-size: 14px;font-weight: bold;color:#f00;">请勿手动关闭弹出框<span></span>
+                  </div>
+                  <p style="padding-top:10px;color:#666">示例：产品经理</p>
+                </div>
+
+                <span class="btn btn-link" style="display: none;" id="downZhilianzhaopinExcel">下载</span>
+                <table class="table table-stripe table-striped table-bordered" style="font-size: 13px;">
+                  <thead>
+                    <tr>
+                      <th>职位名称</th>
+                      <th width="200">公司名字</th>
+                      <th width="100">薪资</th>
+                      <th width="150">地点</th>
+                      <th width="100">经验要求</th>
+                      <th width="100">学历要求</th>
+                      <th width="120">公司类型</th>
+                      <th width="120">公司人数</th>
+                      <th width="260">公司氛围</th>
+                    </tr>
+                  </thead>
+                  <tbody id="zhilianzhaopinBody">
+                    <tr>
+                      <td colspan="9" style="text-align:center;"><span style="color:#666">暂无数据</span></td>
+                    </tr>
+                  </tbody>
+                  <tfoot id="zhilianzhaopinFooter" style="display: none;">
+                    <tr>
+                      <td colspan="9" style="background: #f5f5f5;text-align: right;padding-right: 25px">总条数: <b>100</b>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
+
+            <div id="csdn" class="source-container tab-parent" style="display: none;">
+              <ul class="nav nav-tabs ">
+                <li role="presentation" class="active"><a href="###">搜索</a></li>
+              </ul>
+              <div class="sub-tab-content ">
+                <div>
+                  <div class="form-inline">
+                    <div class="form-group">
+                      关键字:
+                      <input type="text" style="width:200px" autocomplete="off" id="csdnKeyword" class="form-control">
+                    </div>
+                    <button class="btn btn-primary btn-sm" id="searchCsdn">确定</button> <span
+                      style="margin-left:10px;color:#666;font-size: 14px;font-weight: bold;color:#f00;">请勿手动关闭弹出框<span></span>
+                  </div>
+                  <p style="padding-top:10px;color:#666">示例：MySQL</p>
+                </div>
+
+                <span class="btn btn-link" style="display: none;" id="downCsdnExcel">下载</span>
+                <table class="table table-stripe table-striped table-bordered" style="font-size: 13px;">
+                  <thead>
+                    <tr>
+                      <th>标题</th>
+                      <th width="200">作者名字</th>
+                      <th width="100">阅读数</th>
+                      <th width="150">发布时间</th>
+                    </tr>
+                  </thead>
+                  <tbody id="csdnBody">
+                    <tr>
+                      <td colspan="4" style="text-align:center;"><span style="color:#666">暂无数据</span></td>
+                    </tr>
+                  </tbody>
+                  <tfoot id="csdnFooter" style="display: none;">
+                    <tr>
+                      <td colspan="4" style="background: #f5f5f5;text-align: right;padding-right: 25px">总条数: <b>100</b>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
+
+            <div id="mubu" class="source-container tab-parent" style="display: none;">
+              <ul class="nav nav-tabs ">
+                <li role="presentation" class="active"><a href="###">精选文章</a></li>
+              </ul>
+              <div class="sub-tab-content ">
+                <div>
+                  <div class="form-inline">
+                    <!-- <div class="form-group">
+                      关键字:
+                      <input type="text" style="width:200px" autocomplete="off" id="mubuKeyword"
+                        class="form-control">
+                    </div> -->
+                    <button class="btn btn-primary btn-sm" id="searchMubu">确定</button> <span
+                      style="margin-left:10px;color:#666;font-size: 14px;font-weight: bold;color:#f00;">请勿手动关闭弹出框<span></span>
+                  </div>
+                  <p></p>
+                  <!-- <p style="padding-top:10px;color:#666">示例：MySQL</p> -->
+                </div>
+
+                <span class="btn btn-link" style="display: none;" id="downMubuExcel">下载</span>
+                <table class="table table-stripe table-striped table-bordered" style="font-size: 13px;">
+                  <thead>
+                    <tr>
+                      <th>标题</th>
+                      <th width="200">简介</th>
+                      <th width="100">作者</th>
+                      <th width="100">点赞数</th>
+                      <th width="100">阅读数</th>
+                      <th width="100">评论数</th>
+                    </tr>
+                  </thead>
+                  <tbody id="mubuBody">
+                    <tr>
+                      <td colspan="6" style="text-align:center;"><span style="color:#666">暂无数据</span></td>
+                    </tr>
+                  </tbody>
+                  <tfoot id="mubuFooter" style="display: none;">
+                    <tr>
+                      <td colspan="6" style="background: #f5f5f5;text-align: right;padding-right: 25px">总条数: <b>100</b>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
+
+            <div id="souhouWx" class="source-container tab-parent" style="display: none;">
+              <ul class="nav nav-tabs ">
+                <li role="presentation" class="active"><a href="###">搜索</a></li>
+              </ul>
+              <div class="sub-tab-content ">
+                <div>
+                  <div class="form-inline">
+                    <div class="form-group">
+                      关键字:
+                      <input type="text" style="width:200px" autocomplete="off" id="souhouWxKeyword"
+                        class="form-control">
+                    </div>
+                    <button class="btn btn-primary btn-sm" id="searchSougouWx">确定</button> <span
+                      style="margin-left:10px;color:#666;font-size: 14px;font-weight: bold;color:#f00;">请勿手动关闭弹出框<span></span>
+                  </div>
+                  <p style="padding-top:10px;color:#666">示例：赚钱</p>
+                </div>
+
+                <span class="btn btn-link" style="display: none;" id="downSouhouWxExcel">下载</span>
+                <table class="table table-stripe table-striped table-bordered" style="font-size: 13px;">
+                  <thead>
+                    <tr>
+                      <th>文章标题</th>
+                      <th width="340">简介</th>
+                      <th width="170">发文账户</th>
+                      <th width="120">发布时间</th>
+                    </tr>
+                  </thead>
+                  <tbody id="souhouWxBody">
+                    <tr>
+                      <td colspan="4" style="text-align:center;"><span style="color:#666">暂无数据</span></td>
+                    </tr>
+                  </tbody>
+                  <tfoot id="souhouWxFooter" style="display: none;">
+                    <tr>
+                      <td colspan="4" style="background: #f5f5f5;text-align: right;padding-right: 25px">总条数: <b>100</b>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
+
+            <div id="bokeyuan" class="source-container tab-parent" style="display: none;">
+              <ul class="nav nav-tabs ">
+                <li role="presentation" class="active"><a href="###">文章搜索</a></li>
+              </ul>
+              <div class="sub-tab-content ">
+                <div>
+                  <div class="form-inline">
+                    <div class="form-group">
+                      关键字:
+                      <input type="text" style="width:200px" autocomplete="off" id="bokeyuanWxKeyword"
+                        class="form-control">
+                    </div>
+                    <button class="btn btn-primary btn-sm" id="searchBokeyuan">确定</button> <span
+                      style="margin-left:10px;color:#666;font-size: 14px;font-weight: bold;color:#f00;">请勿手动关闭弹出框<span></span>
+                  </div>
+                  <p style="padding-top:10px;color:#666">示例：产品经理</p>
+                </div>
+
+                <span class="btn btn-link" style="display: none;" id="downBokeyuanExcel">下载</span>
+                <table class="table table-stripe table-striped table-bordered" style="font-size: 13px;">
+                  <thead>
+                    <tr>
+                      <th>标题</th>
+                      <th width="150">作者</th>
+                      <th width="120">发布时间</th>
+                      <th width="100">推荐数</th>
+                      <th width="100">评论数</th>
+                      <th width="100">阅读数</th>
+                    </tr>
+                  </thead>
+                  <tbody id="bokeyuanBody">
+                    <tr>
+                      <td colspan="6" style="text-align:center;"><span style="color:#666">暂无数据</span></td>
+                    </tr>
+                  </tbody>
+                  <tfoot id="bokeyuanFooter" style="display: none;">
+                    <tr>
+                      <td colspan="6" style="background: #f5f5f5;text-align: right;padding-right: 25px">总条数: <b>100</b>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
+
+            <div id="lagou" class="source-container tab-parent" style="display: none;">
+              <ul class="nav nav-tabs ">
+                <li role="presentation" class="active"><a href="###">职位搜索</a></li>
+              </ul>
+              <div class="sub-tab-content ">
+                <div>
+                  <div class="form-inline">
+                    <div class="form-group">
+                      关键字:
+                      <input type="text" style="width:200px" autocomplete="off" id="lagouKeyword""
+                        class=" form-control">
+                    </div>
+                    <button class="btn btn-primary btn-sm" id="searchLagou">确定</button> <span
+                      style="margin-left:10px;color:#666;font-size: 14px;font-weight: bold;color:#f00;">请勿手动关闭弹出框<span></span>
+                  </div>
+                  <p style="padding-top:10px;color:#666">示例：产品经理</p>
+                </div>
+
+                <span class="btn btn-link" style="display: none;" id="lagouExcel">下载</span>
+                <table class="table table-stripe table-striped table-bordered" style="font-size: 13px;">
+                  <thead>
+                    <tr>
+                      <th>职位标题</th>
+                      <th width="150">工作地点</th>
+                      <th width="120">公司名字</th>
+                      <th width="100">工资</th>
+                      <th width="200">职位介绍</th>
+                      <th width="260">公司介绍</th>
+                      <th width="260">工作简介</th>
+                      <th width="230">工作氛围</th>
+                    </tr>
+                  </thead>
+                  <tbody id="lagouBody">
+                    <tr>
+                      <td colspan="8" style="text-align:center;"><span style="color:#666">暂无数据</span></td>
+                    </tr>
+                  </tbody>
+                  <tfoot id="lagouFooter" style="display: none;">
+                    <tr>
+                      <td colspan="8" style="background: #f5f5f5;text-align: right;padding-right: 25px">总条数: <b>100</b>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
+
+            <div id="youtube" class="source-container tab-parent" style="display: none;">
+              <ul class="nav nav-tabs ">
+                <li role="presentation" class="active"><a href="###">视频搜索</a></li>
+              </ul>
+              <div class="sub-tab-content ">
+                <div>
+                  <div class="form-inline">
+                    <div class="form-group">
+                      关键字:
+                      <input type="text" style="width:200px" autocomplete="off" id="youtubeKeyword""
+                        class=" form-control">
+                    </div>
+                    <button class="btn btn-primary btn-sm" id="searchYoutube">确定</button> <span
+                      style="margin-left:10px;color:#666;font-size: 14px;font-weight: bold;color:#f00;">请勿手动关闭弹出框<span></span>
+                  </div>
+                  <p style="padding-top:10px;color:#666">示例：iphone</p>
+                </div>
+
+                <span class="btn btn-link" style="display: none;" id="youtubeExcel">下载</span>
+                <table class="table table-stripe table-striped table-bordered" style="font-size: 13px;">
+                  <thead>
+                    <tr>
+                      <th>标题</th>
+                      <th width="100">观看次数</th>
+                      <th width="120">发布时间</th>
+                      <th width="100">点赞数</th>
+                      <th width="100">踩数</th>
+                      <th width="260">作者</th>
+                      <th width="100">粉丝数</th>
+                    </tr>
+                  </thead>
+                  <tbody id="youtubeBody">
+                    <tr>
+                      <td colspan="7" style="text-align:center;"><span style="color:#666">暂无数据</span></td>
+                    </tr>
+                  </tbody>
+                  <tfoot id="youtubeFooter" style="display: none;">
+                    <tr>
+                      <td colspan="7" style="background: #f5f5f5;text-align: right;padding-right: 25px">总条数: <b>100</b>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
+            <div id="empty" style="text-align: center;display: none;">
+              <span>升级中 敬请期待 ...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="panel-tab" style="display: none">
+      <div class="ql-container">
+        <div class="ql-title">
+          <div class="ql-title-box" data-value="知乎热度插件使用手册"><input data-value="知乎热度插件使用手册" readonly="true"
+              class="mousetrap" id="ql-title-input" autocomplete="off" autocorrect="off" spellcheck="false"
+              value="知乎热度插件使用手册"></div>
+        </div>
+        <div class="ql-editor">
+          <h2 line="init">
+            <div data-header="2">一、前言：</div>
+          </h2>
+          <p line="GOzw"><span class="ql-divide"><span class="ql-hr"></span></span></p>
+          <p line="f8KR">各位朋友大家好，这个插件是结合自己知乎运营的经验和对知乎规则的了解开发出来的，在我看来解决了自己很大的痛点，用起来很爽。</p>
+          <p line="lwkt"><br></p>
+          <p line="Ii9w">知乎怎么做好，我的理解“三板斧”。<span
+              style="color: #ff0000;">找问题，写内容，提排名</span>。而想要获取大量的流量，第一步非常重要，插件目前解决的就是如何监控知乎问题热度，找到大的流量机会这一痛点，从专注把这点突破到延展到百度SEO、答题助手等。这款插件专注出效果，解决大多数人在知乎运营中的痛点。
+          </p>
+          <p line="aqBy"><br></p>
+          <p line="oNuX">过去写过两篇旧文，关于知乎怎么运营，供大家在运营中参考：</p>
+          <p line="o5MI"><br></p>
+          <p line="uvM3" style="line-height: 2.0;" linespacing="115">1、知乎运营策略，我的所思所想。<a class="ql-link"
+              href="https://mp.weixin.qq.com/s/D2j6kBduzpLQZ2vqSxP6Jg" target="_blank"
+              rel="noopener noreferrer nofollow">https://mp.weixin.qq.com/s/D2j6kBduzpLQZ2vqSxP6Jg</a></p>
+          <p line="rxND" style="line-height: 2.0;" linespacing="115">2、知乎运营规则解读。<a class="ql-link"
+              href="https://mp.weixin.qq.com/s/D2j6kBduzpLQZ2vqSxP6Jg" target="_blank"
+              rel="noopener noreferrer nofollow">https://mp.weixin.qq.com/s/D2j6kBduzpLQZ2vqSxP6Jg</a></p>
+          <p line="0cSt" style="line-height: 2.0;" linespacing="115"><br></p>
+          <h2 line="clgz" style="line-height: 2.0;" linespacing="115">
+            <div data-header="2">二、插件如何安装：</div>
+          </h2>
+          <p line="HuqU" style="line-height: 2.0;" linespacing="115"><span class="ql-divide"><span
+                class="ql-hr"></span></span></p>
+          <p line="wz6g"><strong>第一步：</strong>百度云下载压缩包到电脑桌面。链接：<a class="ql-link"
+              href="https://pan.baidu.com/s/1nnlKlPxeOI9MaCVa4HyOTA" target="_blank"
+              rel="noopener noreferrer nofollow">https://pan.baidu.com/s/1nnlKlPxeOI9MaCVa4HyOTA</a>&nbsp;</p>
+          <p line="nF6o">提取码：zddt&nbsp;</p>
+          <p line="8bQp"><br></p>
+          <p line="rJHt"><strong>第二步：</strong>从桌面拖拽插件安装包到<span style="color: #000000;">谷歌浏览器</span>的扩展程序中<span
+              style="color: #ff0000;">（注意一定是谷歌浏览器）</span>，点击右上角三个点，<span
+              style="color: #ff0000;">在下拉列表中选择更多工具——扩展程序。</span><span
+              style="color: #000000;">直接从桌面拖拽压缩包即可安装成功。</span><span style="color: #ff0000;">（注意不要解压缩）。</span></p>
+          <p line="7HlD"><span style="color: #000000;">如果是电脑此处用的是开发者模式，安装后在右上角会显示“乎”的小图标。点击即可注册登录。</span></p>
+          <p line="3Hsp"><br></p>
+          <p line="IRUt"><span
+              class="ql-blot-gallery-embed ql-blot-gallery ql-gallery-margin-none ql-gallery-frame-dark"><span
+                class="ql-gallery-editableimage"><span class="img-wrapper cropped"><img class="gallery-image"
+                    width="1915" height="auto" ori-width="1915" src="../images/DycRTwuGZ5DAIRkV.png" style="width:100%"
+                    o></span></span></span></p>
+          <p line="k1R8"><strong>特别说明：</strong>安装插件后可免费试用2小时，请在此时间内体验插件的各项功能。以便更好的了解插件在知乎流量监测、问题寻找中的强大效果。</p>
+          <p line="KD9l"><br></p>
+          <h2 line="FZ9c" style="line-height: 2.0;" linespacing="115">
+            <div data-header="2">三、插件的核心功能介绍</div>
+          </h2>
+          <p line="OxPP" style="line-height: 2.0;" linespacing="115">
+            因为开发成本、服务器成本、运营成本，插件为付费提供服务。同时付费也能支持我们不断的优化产品体验，为您知乎运营助力。不过我们同步也开放了一些免费功能，以下是详细介绍：</p>
+          <h3 line="1RI0" style="line-height: 2.0;" linespacing="115">
+            <div data-header="3">（一）免费版功能</div>
+          </h3>
+          <ul data-list-style="circle">
+            <li line="kNzW" style="line-height: 2.0;" linespacing="115" class="bullet-item">
+              仅免费监控3个问题，最快6小时更新一次，能在一定程度上对问题上的监控，但响应度不够；</li>
+          </ul>
+          <ul data-list-style="circle">
+            <li line="obpL" style="line-height: 2.0;" linespacing="115" class="bullet-item">提供5个举报关键词，用于提升盐值；</li>
+          </ul>
+          <h3 line="31Hp" style="line-height: 2.0;" linespacing="115">
+            <div data-header="3">（二）付费版功能</div>
+          </h3>
+          <p line="QXsu" style="line-height: 2.0;" linespacing="115"><strong>1、监控举报面板</strong></p>
+          <ul data-list-style="circle">
+            <li line="tW4Y" style="line-height: 2.0;" linespacing="115" class="bullet-item">
+              监控问题数量提升至200个，监控频率最快5分钟即可刷新一次。（<span style="color: #ff0000;">高频刷新才能第一时间发现问题热度，占据先发优势，吃到流量上升期的红利</span>）；
+            </li>
+          </ul>
+          <ul data-list-style="circle">
+            <li line="KQK4" style="line-height: 2.0;" linespacing="115" class="bullet-item">
+              当监控问题短期流量增长达到设定的阙值，会在列表中标记红色显示出来，方便直观的发现列表中的好问题；<span style="color: #ff0000;">（这个用户反馈一级棒）</span></li>
+          </ul>
+          <ul data-list-style="circle">
+            <li line="i5HL" style="line-height: 2.0;" linespacing="115" class="bullet-item">
+              举报关键词保持更新。保持举报关键词的更新和举报建议策略，更精准有效的提升知乎盐值。</li>
+          </ul>
+          <p line="fZwP" style="line-height: 2.0;" linespacing="115">特别注意：不要添加“品牌赞助”的问题，这样的问题在知乎众有明确字眼标明。</p>
+          <p line="vPEf" style="line-height: 2.0;" linespacing="115"><span
+              class="ql-blot-gallery-embed ql-blot-gallery ql-gallery-margin-none ql-gallery-frame-dark"><span
+                class="ql-gallery-editableimage"><span class="img-wrapper cropped"><img class="gallery-image"
+                    width="1920" height="auto" ori-width="1920" src="../images/s5Sr5hkmnaIAoW4U.png" style="width:100%"
+                    ori-height="867"></span></span></span></p>
+          <p line="WYAx" style="line-height: 2.0;" linespacing="115"><br></p>
+          <p line="9HLh" style="line-height: 2.0;" linespacing="115"><strong>2、热度潜力问题查找</strong></p>
+          <p line="gxRh" style="line-height: 2.0;" linespacing="115">
+            这是一个很强大的功能，在你输入你想要检索的问题后，点击搜索即可抓取知乎全网的该项问题，在呈现在列表上之前，我们还对抓取到的信息进行了一次清洗。以保证筛选到的问题能尽可能的符合两个维度，（1）当前仍然具有流量；（2）你能通过互赞等方式将排名做到第一或者第二，占据这个流量。从而能实实在在的对应潜力问题这个名字。
+          </p>
+          <p line="Hq5N" style="line-height: 2.0;" linespacing="115"><br></p>
+          <p line="egtL" style="line-height: 2.0;" linespacing="115">
+            同样为了你更好的使用该项功能，我们建议你可以选择你所在领域近期的热点话题进行检索，同时我们再这个界面得右上角提示了如何更好的利用这项功能。在更新的列表中，对钟意的问题你可以点击右侧的“监控”按键实现一键监控。</p>
+          <p line="zzhs" style="line-height: 2.0;" linespacing="115"><span
+              class="ql-blot-gallery-embed ql-blot-gallery ql-gallery-margin-none ql-gallery-frame-dark"><span
+                class="ql-gallery-editableimage"><span class="img-wrapper cropped"><img class="gallery-image"
+                    width="1920" height="auto" ori-width="1920" src="../images/5DdNsWpghIZWGCw0.png" style="width:100%"
+                    ori-height="867"></span></span></span></p>
+          <p line="B5Gh" style="line-height: 2.0;" linespacing="115">做知乎要时刻牢记<span
+              style="color: #ff0000;">搞一个大流量的第1比回答100个小问题都要有效。</span><span
+              style="color: #000000;">我目前接触的朋友，凡是知乎做起来的，几乎都有过一次大流量机会带起来的经历，而这项功能就能大大的帮助你找到那个属于你的流量大机会。</span></p>
+          <p line="BBjE" style="line-height: 2.0;" linespacing="115"><br></p>
+          <p line="JfSt" style="line-height: 2.0;" linespacing="115"><strong>3、知乎百度SEO</strong></p>
+          <p line="H43Z" style="line-height: 2.0;" linespacing="115">
+            知乎目前在百度的搜索权重非常高，此项功能集合了知乎中被百度收录的问题，你可以使用关键词、搜索排名，检索项进行筛选。使用这项功能挑选出那种检索量大，可做到前排的问题能帮你每天被动享受搜索流量。<span
+              style="color: #ff0000;">（如果会玩，也许能通过此项实现实现睡后收入，哈哈）</span></p>
+          <p line="6fb8" style="line-height: 2.0;" linespacing="115"><br></p>
+          <p line="Oxcn" style="line-height: 2.0;" linespacing="115"><span
+              class="ql-blot-gallery-embed ql-blot-gallery ql-gallery-margin-none ql-gallery-frame-dark"><span
+                class="ql-gallery-editableimage"><span class="img-wrapper cropped" style="width:610px;height:187px"><img
+                    class="gallery-image" width="610px" height="auto" ori-width="1920"
+                    src="../images/TgI7sJTWB3y67Xas.png" style="width:100%"></span></span></span></p>
+          <p line="FvFn" style="line-height: 2.0;" linespacing="115"><br></p>
+          <p line="8V20" style="line-height: 2.0;" linespacing="115"><strong>4、商品失效检查</strong></p>
+          <p line="PIcc" style="line-height: 2.0;" linespacing="115">
+            商品失效检查是为知乎好物玩家量身定制的一项功能，当你在个人中心绑定了自己知乎个人主页的链接，点击“检查”按键，即可对问题中的所有商品进行失效检查。</p>
+          <p line="r0A8" style="line-height: 2.0;" linespacing="115"><br></p>
+          <p line="D7Qc" style="line-height: 2.0;" linespacing="115"><span
+              class="ql-blot-gallery-embed ql-blot-gallery ql-gallery-margin-none ql-gallery-frame-dark"><span
+                class="ql-gallery-editableimage"><span class="img-wrapper cropped" style="width:612px;height:139px"><img
+                    class="gallery-image" style="width: 100%;" src="../images/ZhFWpawC5BaSfiPQ.png"
+                    style="width:100%"></span></span></span></p>
+          <p line="M6Gh" style="line-height: 2.0;" linespacing="115"><br></p>
+          <p line="wBLM" style="line-height: 2.0;" linespacing="115"><strong>5、数据采集</strong></p>
+          <p line="SoK1" style="line-height: 2.0;" linespacing="115">如果你需要爬虫但还没有很熟练的掌握它，这项功能是你的福音。除了采集知乎大V的关注和问题<span
+              style="color: #ff0000;">（大V是带流量的，他们找问题的眼光比小白更准）</span>，掌握他们的动向外，我们还开发了豆瓣、贴吧、知道等各大网站的爬虫功能，你只需要粘贴链接，选定采取量，点击执行即可等待数据直观的呈现出来。
+          </p>
+          <p line="qojV" style="line-height: 2.0;" linespacing="115"><span
+              class="ql-blot-gallery-embed ql-blot-gallery ql-gallery-margin-none ql-gallery-frame-dark"><span
+                class="ql-gallery-editableimage"><span class="img-wrapper cropped"><img class="gallery-image"
+                    width="1920" height="auto" ori-width="1920" src="../images/qm6G4QoNHbLgEWSo.png"
+                    style="width:100%"></span></span></span></p>
+          <p line="niLK" style="line-height: 2.0;" linespacing="115"><br></p>
+          <p line="XOS7" style="line-height: 2.0;" linespacing="115"><strong>6、答题助手&amp;智能评分&amp;实时监控</strong></p>
+          <p line="4RQt" style="line-height: 2.0;" linespacing="115">当你在浏览问题时，在问题列表，问题主页中会出现这三个设计点。</p>
+          <ul data-list-style="circle">
+            <li line="9bo1" style="line-height: 2.0;" linespacing="115" class="bullet-item">
+              <strong>评分。</strong>通过统计评分，帮你在浏览问题过程中，一眼发现更具潜力的问题，大大降低找问题耗费的时间，根据评分大小不同对应三种颜色，红、蓝、绿；</li>
+          </ul>
+          <ul data-list-style="circle">
+            <li line="wWQV" style="line-height: 2.0;" linespacing="115" class="bullet-item">
+              <strong>监控。</strong>当你感觉这个问题值得加入监控时，可通过这项功能一键加入监控列表<span style="color: #ff0000;">（这个功能非常爽）</span>；</li>
+          </ul>
+          <ul data-list-style="circle">
+            <li line="Jg05" style="line-height: 2.0;" linespacing="115" class="bullet-item">
+              <strong>答题助手。</strong>为不知道怎么写高赞回答朋友提供的一项助手功能，一个问题高赞自然是有高赞原因的，使用此项功能站在巨人的肩膀上，学习高赞、模仿高赞，成就高赞<span
+                style="color: #ff0000;">（掌握了套路人人都可成就高赞）。</span></li>
+          </ul>
+          <p line="1BlC" style="line-height: 2.0;" linespacing="115"><span
+              class="ql-blot-gallery-embed ql-blot-gallery ql-gallery-margin-none ql-gallery-frame-dark"><span
+                class="ql-gallery-editableimage"><span class="img-wrapper cropped"><img class="gallery-image"
+                    width="1920" height="auto" ori-width="1920" src="../images/J4aCX1ZAZxNszQir.png"
+                    style="width:100%"></span></span></span></p>
+          <p line="lHps" style="line-height: 2.0;" linespacing="115"><span
+              class="ql-blot-gallery-embed ql-blot-gallery ql-gallery-margin-none ql-gallery-frame-dark"><span
+                class="ql-gallery-editableimage"><span class="img-wrapper cropped"><img class="gallery-image"
+                    width="1180" height="auto" ori-width="1180" src="../images/oAQJk35DYmtMj18e.png"
+                    style="width:100%"></span></span></span></p>
+          <p line="iUrP" style="line-height: 2.0;" linespacing="115"><br></p>
+          <p line="77uj" style="line-height: 2.0;" linespacing="115"><br></p>
+          <p line="Nc1S" style="line-height: 2.0;" linespacing="115">
+            功能不复杂，很容易上手，我看到这版产品的时候是很惊喜的，这也是在公司外做的第一款小产品，从浏览评分、到潜力问题查找、到问题流量监控。<strong
+              style="color: #ff0000;">目标导向明确，就是找到大的流量机会，占据大的流量机会。很多做知乎起来的朋友，基本都是靠某一个大流量问题带起来过，所以这点对于做知乎非常重要。</strong>这个过程目前技术更迭了不下于40版，产品成型后又根据用户反馈进行了6次大的调整。我自己使用的感受很爽！相信这个插件也能让你知乎运营很爽。以至于，有些朋友在微信群问我有用吗？我给予了肯定的回答，付费吧，不亏。这是两个懂知乎规则的用户共同设计开发出来的，因为本身就是用户，所以效果导向，更贴近用户。
+          </p>
+          <p line="RRBH" style="line-height: 2.0;" linespacing="115"><span
+              class="ql-blot-gallery-embed ql-blot-gallery ql-gallery-margin-none ql-gallery-frame-dark"><span
+                class="ql-gallery-editableimage"><span class="img-wrapper cropped"><img class="gallery-image"
+                    width="498px" height="auto" ori-width="954" src="../images/TwgWypeqLshtJHYX.png"
+                    style="width:100%"></span></span></span></p>
+          <h3 line="BTAF" style="line-height: 2.0;" linespacing="115">
+            <div data-header="3">（三）其它重要的功能</div>
+          </h3>
+          <p line="gYIg" style="line-height: 2.0;" linespacing="115">
+            <strong>邀请有礼功能：</strong>重点介绍这项功能，如果你用的很舒服，朋友有需要，强烈建立用你的推荐码安利给他，他一定会感谢你。同时我们为你和朋友设计了推荐福利。当他首次付费，你和朋友都将可以额外获得7天免费时长。
+          </p>
+          <p line="uggK" style="line-height: 2.0;" linespacing="115"><span
+              style="color: #ff0000;">我的推荐码是14d5，欢迎使用。（靠推荐获得了133天免费时长，哈哈）</span></p>
+          <p line="9kxh" style="line-height: 2.0;" linespacing="115"><span
+              class="ql-blot-gallery-embed ql-blot-gallery ql-gallery-margin-none ql-gallery-frame-dark"><span
+                class="ql-gallery-editableimage"><span class="img-wrapper cropped" style="width:599px;height:364px"><img
+                    class="gallery-image" style="width:100%" src="../images/KQJHrkoKGx5s6AyX.png"></span></span></span>
+          </p>
+          <p line="jvbu" style="line-height: 2.0;" linespacing="115"><br></p>
+          <h2 line="1vsf" style="line-height: 2.0;" linespacing="115">
+            <div data-header="2">四、常见问题</div>
+          </h2>
+          <p line="oMPE" style="line-height: 2.0;" linespacing="115"><strong>1、评分越高越好吗？</strong></p>
+          <p line="VPKr" style="line-height: 2.0;" linespacing="115">
+            是的，一定程度上评分越高越好，与此同时结合最近回答时间和问题提问时间，如果近期有人回答或者提问时间比较近，则更大概率有流量。</p>
+          <p line="Ex3H" style="line-height: 2.0;" linespacing="115"><span
+              class="ql-blot-gallery-embed ql-blot-gallery ql-gallery-margin-none ql-gallery-frame-dark"><span
+                class="ql-gallery-editableimage"><span class="img-wrapper cropped" style="width:610px;height:185px"><img
+                    class="gallery-image" style="width:100%" src="../images/3GhVMg3lVXMsD4i4.png"></span></span></span>
+          </p>
+          <p line="uFLU" style="line-height: 2.0;" linespacing="115"><br></p>
+          <p line="PrnO" style="line-height: 2.0;" linespacing="115"><strong>2、监控列表很多怎么及时发现好的问题？</strong></p>
+          <p line="ksxd" style="line-height: 2.0;" linespacing="115">最新版增加了阙值功能，当近三小时流量达到某一值，问题标题会自动标红加火，方便第一时间发现。</p>
+          <p line="xqEl" style="line-height: 2.0;" linespacing="115"><span
+              class="ql-blot-gallery-embed ql-blot-gallery ql-gallery-margin-none ql-gallery-frame-dark"><span
+                class="ql-gallery-editableimage"><span class="img-wrapper cropped"><img class="gallery-image"
+                    width="1920" height="auto" ori-width="1920" src="../images/UjzdmofZckx6FCBi.png"
+                    style="width:100%"></span></span></span></p>
+          <p line="eFzV" style="line-height: 2.0;" linespacing="115"><br></p>
+          <p line="XJk1" style="line-height: 2.0;" linespacing="115"><strong>3、下图监控怎么用？</strong></p>
+          <p line="mL7C" style="line-height: 2.0;" linespacing="115">在搜索问题、人气问题、潜力好问中，均会在评分右侧增加此项功能，便于在浏览过程中直接将问题加入检测。
+          </p>
+          <p line="Zpdw" style="line-height: 2.0;" linespacing="115"><span
+              class="ql-blot-gallery-embed ql-blot-gallery ql-gallery-margin-none ql-gallery-frame-dark"><span
+                class="ql-gallery-editableimage"><span class="img-wrapper cropped"><img class="gallery-image"
+                    style="width:100%" src="../images/8BJ5BrbmhW2GA1KL.png"></span></span></span></p>
+          <p line="yXfs" style="line-height: 2.0;" linespacing="115"><br></p>
+          <p line="zoD4" style="line-height: 2.0;" linespacing="115"><strong>4、怎么使用插件爬取大V的回答和问题关注？</strong></p>
+          <p line="93LL" style="line-height: 2.0;" linespacing="115">需要在知乎官网找到那位大V，复制他的回答页面链接和问题关注链接到插件搜索框，即可一键爬取。</p>
+          <p line="4Huz" style="line-height: 2.0;" linespacing="115"><span
+              class="ql-blot-gallery-embed ql-blot-gallery ql-gallery-margin-none ql-gallery-frame-dark"><span
+                class="ql-gallery-editableimage"><span class="img-wrapper cropped"><img class="gallery-image"
+                    style="width:100%" src="../images/Uec8717JWQvjAjEc.png"></span></span></span></p>
+          <p line="czYi" style="line-height: 2.0;" linespacing="115"><br></p>
+          <p line="REHh" style="line-height: 2.0;" linespacing="115"><br></p>
+          <p line="BNDf" style="line-height: 2.0;" linespacing="115"><strong>4、数据面板的浏览增量是什么意思？</strong></p>
+          <p line="G0TR" style="line-height: 2.0;" linespacing="115">
+            浏览增量将加入监控的那一刻初始值设置为0，统计的为每一个监控区间的流量增加值。如此可以更直观的观察到近期的问题流量变动情况。</p>
+          <p line="ZJ53" style="line-height: 2.0;" linespacing="115"><span
+              class="ql-blot-gallery-embed ql-blot-gallery ql-gallery-margin-none ql-gallery-frame-dark"><span
+                class="ql-gallery-editableimage"><span class="img-wrapper cropped"><img class="gallery-image"
+                    style="width:100%" src="../images/3KFBV7McHXWK4Zq0.png"></span></span></span></p>
+          <p line="c3Fd" style="line-height: 2.0;" linespacing="115"><br></p>
+          <p line="pusp" style="line-height: 2.0;" linespacing="115"><strong>最后，加油，知乎运营er，祝流量多多，生财多多！</strong></p>
+          <p line="qiDC" style="line-height: 2.0;" linespacing="115"><br></p>
+          <p line="iXKv" style="line-height: 2.0;" linespacing="115">PS：小彩蛋。这篇知乎运营规则解读是付费阅读，<a class="ql-link"
+              href="https://mp.weixin.qq.com/s/D2j6kBduzpLQZ2vqSxP6Jg" target="_blank"
+              rel="noopener noreferrer nofollow">https://mp.weixin.qq.com/s/D2j6kBduzpLQZ2vqSxP6Jg</a>，定价12元，已有35人付费，绝对是干货，购买会员后截图发工作人员免费兑换文稿。帮你更好的弄明白知乎官方的态度。另付费后可申请加入知乎深度运营交流群，产品动态第一时间更新，知乎互赞群内即可完成。
+          </p>
+          <div style="display: flex;">
+            <div style="padding:0 30px 0 0 ">
+              <p line="Nq6E" style="line-height: 2.0;" linespacing="115"><strong
+                  style="color: #ff0000;">微信：xuesongzhushou</strong></p>
+              <p line="XQcm" style="line-height: 2.0;" linespacing="115"><span
+                  class="ql-blot-gallery-embed ql-blot-gallery ql-gallery-margin-none ql-gallery-frame-dark"><span
+                    class="ql-gallery-editableimage"><span class="img-wrapper cropped"><img class="gallery-image"
+                        width="205px" height="auto" ori-width="430"
+                        src="../images/HZz3pLdvgcm01E5l.png"></span></span></span></p>
+            </div>
+
+            <div class="row">
+              <div class="col-md-4">
+                <div class="thumbnail">
+                  <div style="text-align: center" class="caption">
+                    <h3 style="margin: 0 0 5px;font-size: 16px">1个月</h3>
+                    <p style="margin-bottom: 0"><span class="red">29元</span></p>
+
+                  </div>
+                  <img src="../images/29.png" style="height: 150px">
+                  <p style="margin-bottom: 0;padding-top: 5px;padding-left:10px;">续费请提前一天，备注“注册邮箱”</p>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="thumbnail">
+                  <div style="text-align: center" class="caption">
+                    <h3 style="margin: 0 0 5px;font-size: 16px">3个月</h3>
+                    <p style="margin-bottom: 0"><span class="red">60元</span></p>
+
+
+                  </div>
+                  <img src="../images/60.png" style="height: 150px">
+                  <p style="margin-bottom: 0;padding-top: 5px;padding-left:10px;">续费请提前一天，备注“注册邮箱”</p>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="thumbnail">
+                  <div style="text-align: center" class="caption">
+                    <h3 style="margin: 0 0 5px;font-size: 16px">1年</h3>
+                    <p style="margin-bottom: 0"><span style="color: red">200元</span></p>
+
+                  </div>
+                  <img src="../images/200.png" style="height: 150px">
+                  <p style="margin-bottom: 0;padding-top: 5px;padding-left:10px;">续费请提前一天，备注“注册邮箱”</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <p line="nSDZ" style="line-height: 2.0;" linespacing="115"><br></p>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+
+
+
+  <!--用戶按鈕 -->
+  <div class="person-btn-wrapper">
+    <button type="button" data-toggle="modal" data-target="#personModal">
+      <img src="../images/person.png" />
+    </button>
+  </div>
+
+  <ul class="right-nav">
+    <li role="presentation"><a href="https://support.qq.com/products/290458" target="_blank">使用手册</a></li>
+    <li role="presentation" data-toggle="modal" class="invitations" data-target="#invitationModal">邀请有礼</li>
+    <li role="presentation" data-toggle="modal" class="renewModalBtn" data-target="#renewModal">续费</li>
+  </ul>
+  <div class="modal fade" id="personModal" tabindex="-1" role="dialog" aria-labelledby="personModal">
+    <div class="modal-dialog" style="width: 700px" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+              aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">个人中心</h4>
+        </div>
+        <div class="modal-body">
+          <div class="personal-container">
+            <div class="panel panel-default">
+              <ul class="list-group person-group">
+                <li class="list-group-item">
+                  <span class="s-label">邮箱 : </span><span class="s-value emil"></span>
+                  <a href="###" class="change-password" data-toggle="modal" data-target="#passwordModal">修改密码</a>
+                </li>
+                <li class="list-group-item"><span class="s-label">会员类型 : </span><span class="s-value s-type"></span>
+                </li>
+                <li class="list-group-item"><span class="s-label">我的邀请码 : </span><span class="s-value"
+                    id="invitationCode"></span></li>
+                <li class="list-group-item" id="surplusTime" style="display:none;"><span class="s-label">剩余可用时长 :
+                  </span><span class="s-value surplusTime"></span></li>
+                <li class="list-group-item" id="expirationTime" style="display:none;"><span class="s-label">到期时间 :
+                  </span><span class="s-value expirationTime" style="font-weight: bold;color: #337ab7"></span></li>
+                <!--li class="list-group-item"><span class="s-label">举报关键词 : </span><span class="s-value"
+                    id="limitReport"></span></li -->
+                <li class="list-group-item"><span class="s-label">频次设置 : </span>
+                  <p class="slider-wrapper is-disabled">
+                    <span class="slider-line lpos1"></span>
+                    <span class="slider-label col1">5分钟</span>
+                    <span class="slider-label col2">30分钟</span>
+                    <span class="slider-label col3">1小时</span>
+                    <span class="slider-label col4">6小时</span>
+                    <span class="slider-label col5">1天</span>
+                    <span class="slider-label col6">3天</span>
+                    <span class="slider-label col7">5天</span>
+                    <span class="slider-circular cpos1"></span>
+                  </p>
+                  <span class="sr-tips" style="display: none">升级为VIP会员可设置频次</span>
+                  <a href="###" style="display: none;margin-left: 30px" id="set-rate-btn">保存设置</a>
+                </li>
+                <li class="list-group-item flex">
+                  <span class="s-label">知乎个性域名 : </span>
+                  <input type="text" style="width: 335px" id="peopleUrl" class="form-control" placeholder="知乎个人地址">
+                  <a href="###" style="margin-left: 10px" id="setPeopleUrl">保存</a>
+                </li>
+                <li class="list-group-item flex">
+                  <span class="s-label">创作者等级 : </span>
+                  <input type="text" style="width: 190px" class="form-control" id="creatorLevel" placeholder="创作者等级">
+                  <a href="###" style="margin-left: 10px" id="setCreatorLevel">保存</a>
+                </li>
+                <li class="list-group-item flex">
+                  <span class="s-label">专注领域 : </span>
+                  <input type="text" style="width: 190px" id="specialTopic" class="form-control" placeholder="专注领域">
+                  <a href="###" style="margin-left: 10px" id="setSpecialTopic">保存</a>
+                  <span style="font-size:12px;margin-left: 16px">设置专注领域可以为你精准匹配点赞</span>
+                </li>
+                <li class="list-group-item flex">
+                  <span class="s-label">盐值 : </span>
+                  <input type="text" style="width: 190px" id="saltValue" class="form-control" placeholder="盐值">
+                  <a href="###" style="margin-left: 10px;" id="setSaltValue">保存</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="passwordModal" tabindex="1" role="dialog" aria-labelledby="passwordModal">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+              aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">修改密码</h4>
+        </div>
+        <div class="modal-body">
+          <form class="form-horizontal">
+            <div class="form-group">
+              <label for="oldPassword" class="col-sm-2 control-label">原密码 : </label>
+              <div class="col-sm-10">
+                <input type="password" class="form-control" id="oldPassword" placeholder="原密码">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="password" class="col-sm-2 control-label">新密码 : </label>
+              <div class="col-sm-10">
+                <input type="password" class="form-control" id="password" placeholder="新密码">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="rePassword" class="col-sm-2 control-label">确认密码 : </label>
+              <div class="col-sm-10">
+                <input type="password" class="form-control" id="rePassword" placeholder="确认密码">
+              </div>
+            </div>
+            <div class="alert alert-danger error-alert" role="alert"
+              style="margin: 10px 0 0;padding:6px 20px; display: none">
+              <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+              <span class="sr-only">Error:</span>
+              <span class="error-msg"></span>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" id="changePad">确定</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="invitationModal" tabindex="1" role="dialog" aria-labelledby="invitationModal">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+              aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">邀请有礼</h4>
+        </div>
+        <div class="modal-body">
+          <div class="invitation-wrapper">
+            <h5 style="margin: 5px 0">
+              <b class="invitation-label">推荐码： </b>
+              <span class="invitation-value"></span>
+              <span class="copy">复制</span>
+              <input type="text" style="opacity: 0;" class="invitation-hide-input">
+            </h5>
+            <p style="font-size: 14px;color: #949090;font-weight: bold;">每推荐1位好友付费使用，你可获得1月免费使用时长，你的好友也将额外获赠7天免费时长。 </p>
+            <p><b>注意提醒好友⽤你的推荐码注册，否则⽆法统计。 </b></p>
+            <hr style="margin: 5px 0" />
+            <h5 style="font-size: 14px">
+              <b>推荐列表:</b>
+              <span id="invitationTips"></span>
+            </h5>
+            <table class="table table-striped table-bordered">
+              <thead>
+                <tr>
+                  <td>邮箱</td>
+                  <td>注册时间</td>
+                  <td>会员类型</td>
+                </tr>
+              </thead>
+              <tbody id="invitation-list">
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="renewModal" tabindex="1" role="dialog" aria-labelledby="renewModal">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+              aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">续费</h4>
+        </div>
+        <div class="modal-body">
+          <ul class="list-group renew-group">
+            <li class="list-group-item">
+              <span class="renew-label">会员邮箱： </span>
+              <span class="r-email-value"></span>
+            </li>
+            <li class="list-group-item">
+              <span class="renew-label">会员到期时间： </span>
+              <span class="r-expiration-time"></span>
+            </li>
+            <li class="list-group-item">
+              <span class="renew-label">费用周期： </span>
+              <button type="button" class="btn btn-primary btn-sm" id="oneMonthBtn">一个月29元</button>
+              <button type="button" class="btn btn-primary btn-sm" id="threeMonthBtn">三个月60元</button>
+              <button type="button" class="btn btn-primary btn-sm" id="oneYearBtn">一年200元</button>
+            </li>
+          </ul>
+          <div style="text-align: center">
+            <img src="../images/vx.png" width="180" />
+            <h4 style="font-size: 14px">咨询请添加微信</h4>
+          </div>
+          <div>
+            <!-- <div class="row">
+            <div class="col-md-4">
+              <div class="thumbnail">
+                <div style="text-align: center" class="caption">
+                  <h3 style="margin: 0 0 5px;font-size: 20px">1个月</h3>
+                  <p style="margin-bottom: 0"><span class="red">29元</span></p>
+
+                </div>
+                <img src="../images/29.png" style="height: 280px">
+                <p style="margin-bottom: 0;padding-left:10px;">续费请提前一天，备注“注册邮箱”</p>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="thumbnail">
+                <div style="text-align: center" class="caption">
+                  <h3 style="margin: 0 0 5px;font-size: 20px">3个月</h3>
+                  <p style="margin-bottom: 0"><span class="red">60元</span></p>
+                </div>
+                <img src="../images/60.png" style="height: 280px">
+                <p style="margin-bottom: 0;padding-left:10px;">续费请提前一天，备注“注册邮箱”</p>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="thumbnail">
+                <div style="text-align: center" class="caption">
+                  <h3 style="margin: 0 0 5px;font-size: 20px">1年</h3>
+                  <p style="margin-bottom: 0"><span style="color: red">200元</span></p>
+
+                </div>
+                <img src="../images/200.png" style="height: 280px">
+                <p style="margin-bottom: 0;padding-left:10px;">续费请提前一天，备注“注册邮箱”</p>
+              </div>
+            </div>
+          </div> -->
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="addQuestionPanel" class="modal fade" >
+
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">添加监控问题</h4>
+        </div>
+        <div class="modal-body">
+          <form class="">
+            <div class="form-group">
+              <label for="url" style="padding-right: 0">问题地址<span
+                      class="url-tips">(示例：https://www.zhihu.com/question/392617619)</span></label>
+              <textarea style="height:150px" class="form-control" id="url" placeholder="问题地址"></textarea>
+            </div>
+            <button type="button" class=" btn btn-primary btn-block" id="addQuestion">提交</button>
+            <p style="padding-top:10px;color:#f00;margin:0">如果提交多个问题，每个问题一行，最多20行</p>
+          </form>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+          <!-- btn-secondary上色  -->
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="reportModal" tabindex="-1" role="dialog" aria-labelledby="reportModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+              aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="reportModalLabel">采纳有奖，赠送7天黄金VIP</h4>
+        </div>
+        <div class="modal-body" style="padding:10px 10px 0;">
+          <div class="personal-container">
+            <div class="panel panel-default">
+              <ul class="list-group person-group">
+                <li class="list-group-item flex">
+                  <span class="s-label" style="flex: 0 0 130px">用户名关键字 : </span>
+                  <input type="text" id="reportKeyword" style="height: 34px;" class="form-control"
+                    placeholder="您要提供的举报 用户名关键字">
+                </li>
+                <li class="list-group-item flex">
+                  <span class="s-label" style="flex: 0 0 130px">请选择举报理由 : </span>
+                  <div class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" id="dropdownMenu1" role="button"
+                      aria-haspopup="true" aria-expanded="false">
+                      <span id="crimeVal">请选择举报理由</span>
+                      <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu" id="reportList" aria-labelledby="dropdownMenu1">
+                      <li><a href="###">冒充我或他人</a></li>
+                      <li><a href="###">垃圾广告帐号</a></li>
+                      <li><a href="###">个人信息不符合规范</a></li>
+                    </ul>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+          <button type="button" class="btn btn-primary" id="reportSubmit">确定</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="pechargeModal" tabindex="-1" role="dialog" aria-labelledby="pechargeModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+              aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="pechargeModalLabel">支付</h4>
+        </div>
+        <div class="modal-body">
+          <div
+            style="display:flex;flex-direction: column;align-items: center;justify-content:center;padding: 10px 30px 20px;">
+            <p style="text-align: center;padding-bottom: 10px;font-size: 18px;"><b>请使用支付宝扫码支付</b></p>
+            <div id="pechargeQrCode"></div>
+            <p style="padding:10px 0 ;text-align: center"><b>扫码支付成功后，可关闭此窗口。</b></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/personal.js"></script>
+  <script src="../js/panel.js"></script>
+  <script src="../js/monitoring-panel.js"></script>
+  <script src="../js/search-hot.js"></script>
+  <script src="../js/seo.js"></script>
+  <script src="../js/invalidGoods.js"></script>
+  <script src="../js/ranking.js"></script>
+</body>
+
+</html>
