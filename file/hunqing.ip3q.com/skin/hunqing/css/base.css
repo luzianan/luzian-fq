@@ -1,0 +1,38 @@
+@charset "utf-8";
+/* 共用css */
+* { margin: 0; padding: 0 }
+body { font: 12px/1.5 'Microsoft Yahei', 'Simsun'; color: #666666; background: #fff }
+img { border: 0; display: block }
+ul { list-style: none; }
+h1, h2, h3, h4, h5, h6 { font-size: 100%; font-weight: normal; }
+a { outline: none; }
+a:link, a:visited { text-decoration: none; color: #666 }
+a:hover { text-decoration: none; }
+.clear { clear: both; }
+.blank { height: 5px; overflow: hidden; width: 100%; margin: auto; clear: both }
+.f_l { float: left }
+.f_r { float: right }
+.l_box { width: 670px; }
+.r_box { width: 300px; }
+/* 头部信息 */
+.headtop { width: 1000px; margin: 0 auto 10px; overflow: hidden; clear: both; }
+.logot{ font-size:20px; color:#7c4295; margin:30px 0 0 30px}
+.tel{ background:url(../images/tel_bg.png) no-repeat center left; padding-left:30px; margin-top:30px}
+nav{ height:42px; width:100%; line-height:42px; background:#923f9a; clear:both; overflow:hidden; }
+#topnav ul{ width: 1000px; margin:auto  }
+#topnav a { display: inline-block; font-size: 16px; font-family: "Microsoft Yahei", Arial, Helvetica, sans-serif; padding: 0 20px; }
+#topnav a:hover {background: #ED05AD; }
+#topnav a { color: #FFF }
+#topnav_current { background: rgba(237,5,173,0.7)  }/* 高亮选中颜色 */
+article { width: 1000px; margin:auto; clear:both; overflow:hidden }
+/*footer*/
+footer { background: url(../images/footerbg.jpg) repeat; width: 100%; clear: both;   color: #d388d0; }
+.endbottom{ width: 1000px; margin:auto; clear:both; overflow:hidden; padding:20px 0 }
+.copyright { color: #d388d0; line-height: 40px; height:40px; background:rgba(133,56,131,0.5);text-align: center;}
+.copyright a{color: #d388d0;}
+.endbottom section h2{ font-size: 16px;text-shadow: 1px 1px 1px #5A5656; color:#c487b7;  background:url(../images/bgline.jpg) repeat-x bottom; line-height:40px}
+.endbottom section{ overflow:hidden; float:left; margin-right:30px}
+.endbottom section p{color:#fbc9f0; padding:10px 0 0 0}
+.end01{ width:200px}
+.end04 li{ float:left; text-align:center; margin-left:10px}
+.end04 li img{ width:100px; height:100px}

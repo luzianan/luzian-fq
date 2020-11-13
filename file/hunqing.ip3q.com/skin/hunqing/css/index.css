@@ -1,0 +1,87 @@
+@charset "utf-8";
+.caseshow { width: 1000px; margin: auto; overflow: hidden; padding-bottom: 40px }
+.t_h { font-size: 24px; display: block; text-align: center; background: url(../images/titlebg.png) no-repeat center; padding: 30px 0; }
+.t_h span { color: #a442a5 }
+.caseshow ul li { width: 184px; height: 230px; background: url(../images/bookbg.png); font-size: 14px; display: inline-block; float: left; margin-right: 14px; }
+.caseshow ul li img { padding: 9px 0 0 9px; width: 166px; height: 166px; }
+.caseshow ul li span { padding: 14px 0 0 9px; clear: both; width: 100%; display: block; font-weight: bold }
+.caseshow ul li span a { color: #930195 }
+.caseshow ul li:hover span a { color: #DD3DDF; }
+.yp { background: #f0efef; width: 100%; overflow: hidden; padding-bottom: 20px }
+.pics { width: 1000px; margin: auto }
+.picsbox { width: 580px; overflow: hidden }
+.picsbox img { width: 250px; min-height: 270px; -moz-transition: all 0.5s; -webkit-transition: all 0.5s; -o-transition: all 0.5s; transition: all 0.5s; }
+.picsbox img:hover { -moz-transform: scale(1.1); -webkit-transform: scale(1.1); -o-transform: scale(1.1); -ms-transform: scale(1.1); }
+.picsbox ul { overflow: hidden; width: 580px }
+.picsbox ul li { float: left; width: 250px; height: 270px; overflow: hidden; margin: 0 0 20px 20px; position: relative; display: block }
+.picsbox ul li span { position: absolute; bottom: 0; background: rgba(0,0,0,0.5); color: #FFF; padding: 8px; width: 100%; opacity: 0 }
+.picsbox ul li:hover span { opacity: 1 }
+#outer { width: 1000px; margin: auto; }
+#tab { overflow: hidden; zoom: 1; margin-bottom: 10px }
+#tab li { float: left; color: #d448a2; height: 30px; cursor: pointer; line-height: 30px; padding: 0 20px; background: #f0efef; }
+#tab li.current { color: #fff; background: #d448a2; }
+#content { }
+#content ul { line-height: 25px; display: none; }
+.articles { margin: 0 auto 20px; width: 1000px; overflow: hidden; }
+.articles dl { display: block; overflow: hidden; margin-bottom: 12px; width: 470px; background: #f1f1f1; padding: 10px; float: left; margin: 0 10px 10px 0 }
+.articles dd { line-height: 20px; margin-top: 15px }
+.articles dt { float: left; position: relative; width: 180px; height: 130px; overflow: hidden; margin-right: 15px; }
+.articles dt i { position: absolute; background: url(../images/ajhd.png); width: 58px; height: 36px; display: block; top: 0 }
+.ctitle { font-size: 16px; }
+.ctitle a { color: #000 }
+.articles dl:hover .ctitle a { color: #d448a2 }
+.aboutus { padding: 20px; font-size: 16px; text-indent: 2em }
+.aboutus p { margin-bottom: 15px }
+.lm-title { background: #d448a2; color: #fff; font-size: 16px; padding: 10px 20px; margin: 10px 0; border-radius: 40px 0px; }
+.lm-title span { float: right; font-size: 14px }
+.lm-title span a { color: #fff }
+.lm-title span a:hover { color: #f1f1f1 }
+.aboutus p img, .news_content img { margin: auto; max-width: 100% !important; height: auto !important }
+.case { overflow: hidden }
+.caselist img { -moz-transition: all 0.5s; -webkit-transition: all 0.5s; -o-transition: all 0.5s; transition: all 0.5s; width: 240px; height: 240px; }
+.caselist li img:hover { -moz-transform: scale(1.1); -webkit-transform: scale(1.1); -o-transform: scale(1.1); -ms-transform: scale(1.1); }
+.caselist li { float: left; width: 240px; height: 240px; overflow: hidden; margin: 0 0 20px 0; position: relative; display: block; margin-right: 8px }
+.caselist li span { position: absolute; bottom: 0; background: rgba(0,0,0,0.5); color: #FFF; padding: 8px; width: 100%; }
+.news_title { font-size: 24px; font-weight: 400; padding: 20px 0 10px 0; color: #000000; }
+.news_author { width: 100%; color: #999; line-height: 18px; position: relative; margin-bottom: 20px; }
+.news_author span { margin-right: 20px; padding-left: 20px }
+.au01 { background: url(../images/author2.png) no-repeat left center }
+.au02 { background: url(../images/date.png) no-repeat left center }
+.au03 b { color: #333; padding: 0 5px }
+.news_about { color: #888888; border: 1px solid #F3F3F3; padding: 10px; margin: 20px auto 15px auto; line-height: 23px; background: none repeat 0 0 #F6F6F6; }
+.news_about strong { color: #38485A; font-weight: 400 !important; font-size: 13px; padding-right: 8px; }
+.news_content { line-height: 24px; font-size: 15px; }
+.news_content p { overflow: hidden; word-wrap: break-word; margin-bottom: 15px }
+.news_content p img { margin: auto }
+.page { margin: 20px 0 0 0; text-align: center; width: 100%; overflow: hidden; }
+.page a b { color: #999; }
+.page>b, .page a { margin: 0 2px; height: 26px; line-height: 26px; border-radius: 50%; width: 26px; text-align: center; display: inline-block }
+.page a { margin: 0 2px; height: 26px; line-height: 26px; border-radius: 50%; width: 26px; text-align: center; display: inline-block }
+.page>b, .page a:hover { background: #333; color: #FFF; }
+.page a { color: #F33; border: #999 1px solid; }
+.blog-list { position: relative; overflow: hidden; padding-bottom: 20px; border-bottom: #eee 1px solid; }
+.newblog { width: 100%; overflow: hidden; }
+.newblog h2 { color: #333; font-size: 16px; margin: 20px 0 10px 0; clear: both; font-weight: bold; }
+.newblog h2 a { color: #333 }
+.newblog h2:hover a { color: #000 }
+p.dateview { margin-bottom: 10px }
+p.dateview span { margin: 0 10px 0 0 }
+p.dateview span a { color: #63B120 }
+.newblog figure { float: left; margin-right: 10px; }
+.newblog figure img { width: 170px; border: #EAE6E7 1px solid; padding: 4px; }
+#pageContents li { list-style-type: none; font-size: 15px; margin: 0 20px 0 0; }
+#pageContents li a { display: block; float: left; padding: 5px 10px; border: #d448a2 1px solid; margin-right: 20px; border-radius: 5px; color: #d448a2; }
+div#pageContents { margin-top: 10px; }
+a#pagecurrent { background: #d448a2; color: #fff !important; }
+.nlist { margin: 0 0 0 10px; line-height: 1.9; display: table; }
+.nlist p { display: table-cell; vertical-align: middle; font-size: 15px; }
+a.readmore { background: #f90; color: #fff; padding: 5px 10px; display: block; position: absolute; right: 0; bottom: 20px; }
+a.readmore:hover { background: #ff4604 }
+.line { overflow: hidden; width: 97%; height: 20px; border-bottom: 1px dashed #ccc; }
+.mod-sb-panel { padding: 30px 30px 10px; background: #f6f5f2; margin-bottom: 25px; width: 200px }
+.mod-sb-panel li { margin-bottom: 20px; display: block; }
+.mod-sb-panel li a { color: #393839; font-size: 16px; text-decoration: none; -moz-transition: all 0.5s; -webkit-transition: all 0.5s; -o-transition: all 0.5s; transition: all 0.5s; display: block; }
+.mod-sb-panel li a:hover { background: #FD6000; display: block; color: #fff; }
+.nextinfo { margin: 20px 0; font-size: 15px; }
+.nextinfo p { display: block; margin-bottom: 5px; padding: 10px 5px }
+.nextinfo p a:hover { color: #000 }
