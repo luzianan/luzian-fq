@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>知乎助手</title>
+  <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
+  <link rel="stylesheet" href="css/main.css" type="text/css">
+  <script type="text/javascript" src="js/lib/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="js/lib/bootstrap.min.js"></script>
+  <script type="text/javascript" src="js/lib/util.js"></script>
+</head>
+<body>
+<!--v-cloak-->
+<div id="app">
+  <div class="personBtn"></div>
+  <div class="login-wrapper">
+    <form style="padding: 0 10px 15px" class="form-horizontal">
+      <h4 style="text-align: center;padding-bottom: 2px"><strong>登录</strong></h4>
+      <div class="form-group" style="display: flex;align-items: center">
+        <label for="email" class="col-sm-3 control-label" style="text-align: right;padding-right: 0">邮箱:</label>
+        <div class="col-sm-9" style="flex: 1;">
+          <input type="email" class="form-control " autocomplete="off" value="" id="email" placeholder="邮箱">
+        </div>
+      </div>
+      <div class="form-group" style="display: flex;align-items: center">
+        <label for="password" class="col-sm-3 control-label" style="text-align: right;padding-right: 0">密码:</label>
+        <div class="col-sm-9" style="flex: 1;">
+          <input type="password" class="form-control " autocomplete="off" value="" id="password" placeholder="密码">
+        </div>
+      </div>
+      <button type="button" class="btn btn-primary btn-block" id="loginSubmit">登录</button>
+      <div class="alert alert-danger" id="login-alert" style="margin: 10px 0 0;padding:6px 20px;display: none" role="alert">
+        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+        <span class="sr-only">Error:</span>
+        <span id="login-message"></span>
+      </div>
+      <div style="overflow: hidden">
+        <a href="###" class="btn btn-link" style="float:right;margin:2px 0 7px" id="to-register">注册</a>
+      </div>
+    </form>
+  </div>
+  <div class="register-wrapper">
+    <form style="padding: 0 10px 30px" class="form-horizontal">
+      <h4 style="text-align: center;padding-bottom: 2px"><strong>注册</strong></h4>
+      <div class="form-group" style="display: flex;align-items: center">
+        <label for="register-email" class="col-sm-3 control-label is-required"
+               style="text-align: right;padding-right: 0">邮箱:</label>
+        <div class="col-sm-9" style="flex: 1;">
+          <input type="email" class="form-control " autocomplete="off" value="" id="register-email" placeholder="邮箱">
+        </div>
+      </div>
+      <div class="form-group" style="display: flex;align-items: center">
+        <label for="register-pwd" class="col-sm-3 control-label is-required" style="text-align: right;padding-right: 0">密码:</label>
+        <div class="col-sm-9" style="flex: 1;">
+          <input type="password" class="form-control " autocomplete="off" value="" id="register-pwd" placeholder="密码">
+        </div>
+      </div>
+      <div class="form-group" style="display: flex;align-items: center">
+        <label for="register-pwd" class="col-sm-3 control-label is-required" style="text-align: right;padding-right: 0">确认密码:</label>
+        <div class="col-sm-9" style="flex: 1;">
+          <input type="password" class="form-control " autocomplete="off" value="" id="register-re-pwd"
+                 placeholder="确认密码">
+        </div>
+      </div>
+      <div class="form-group" style="display: flex;align-items: center">
+        <label for="register-code" class="col-sm-4 control-label"
+               style="text-align: right;padding-right: 0">邀请码:</label>
+        <div class="col-sm-9" style="flex: 1;">
+          <input type="text" class="form-control " autocomplete="off" value="" id="register-code" placeholder="没有可不填">
+        </div>
+      </div>
+      <button type="button" class="btn btn-primary btn-block" id="registerSubmit">注册</button>
+      <div class="alert alert-danger" id="register-alert" style="margin: 10px 0 0;padding:6px 20px;display: none"
+           role="alert">
+        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+        <span class="sr-only">Error:</span>
+        <span id="register-message"></span>
+      </div>
+      <div class="alert alert-success" id="register-success" style="margin: 10px 0 0;padding:6px 20px;" role="alert">
+        注册成功
+      </div>
+      <a href="###" class="btn btn-link" style="float:right;margin:2px 0 7px" id="to-login">登录</a>
+    </form>
+  </div>
+  <div class="context-wrapper container-fluid" style="display:none;padding: 10px">
+    <div class="show-info">
+      <ul>
+        <li><span class="s-label">邮箱 :</span><span class="value show-emil"></span></li>
+        <li><span class="s-label">会员类型 :</span><span class="value show-type"></span></li>
+        <li id="surplusTime" style="display: none"><span class="s-label">剩余可用时长 :</span><span
+            class="value show-surplus-time"></span></li>
+        <li id="expirationTime" style="display: none">
+            <span class="s-label">到期时间 :</span>
+            <span class="value show-expiration-time" style="font-weight: bold;color: #337ab7"></span>
+        </li>
+        <li id="monitorRate"><span class="s-label">更新频率 :</span><span class="value show-rate"></span></li>
+        <!--li><span class="s-label">举报关键词 :</span><span class="value" id="limitReport"></span></li -->
+        <li style="display: flex;align-items: center"><span class="s-label">是否开启评分显示 :</span>
+          <label style="display:flex;padding:5px 0 0 0;white-space: nowrap;user-select:none;font-weight: normal">
+            <input type="checkbox" checked id="scoreSwitch" style="margin-right: 3px"> 开启 </label>
+          <span class="value" style="font-size: 10px;color: #adabab;padding-left:5px">(在搜索结果页和等你回答页显示评分)</span></li>
+        <li >
+            <span class="s-label">版本号 :</span>
+            <span class="value ">当前 <span class="current-version"></span> </span>
+            <span style="padding-left:10px">最新</span>
+            <span class="value new-version" ></span>
+            <a href="" target="_blank" class="value extension-download">下载</a>
+        </li>
+      </ul>
+    </div>
+    <button type="button" class="btn btn-primary btn-lg btn-block btn-sm mb-10" id="panel"> 控制面板</button>
+  </div>
+</div>
+<script src="js/popup.js" type="text/javascript"></script>
+</body>
+</html>
