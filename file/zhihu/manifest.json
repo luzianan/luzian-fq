@@ -1,7 +1,7 @@
 {
-  "manifest_version": 2,
-  "name": "知乎助手",
-  "version": "1.2.0",
+  "manifest_version": 3,
+  "name": "zh助手",
+  "version": "1.8.0",
   "description": "知乎助手，监控数量最多200个，频率最快5分钟刷新一次，输入你想要检索的问题，点击搜索可抓取知乎全网数据，数据呈现之前，我们对数据进行了清洗。以保证数据能尽可能的符合两个维度，当前仍然具有流量和你能通过互赞等方式将排名做到第一或者第二，占据这个流量",
   "browser_action": {
     "default_icon": "images/icon16.png",
