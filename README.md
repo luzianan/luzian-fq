@@ -5,4 +5,4 @@
 - doc files
 - and others
 
-welcome all starers!
+learning to code!
