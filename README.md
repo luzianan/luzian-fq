@@ -7,7 +7,7 @@
 |  ----  | ----  | ---- |
 | [PandaVPN](https://www.panhdpe.xyz/r/22216799) | 海外华人开发，客服中文沟通，一键使用 | 有免费试用，2年超值套餐 |
 | [NordVPN](https://go.nordlocker.net/aff_c?offer_id=15&aff_id=38201&url_id=6063&aff_sub=luzian&aff_click_id=fq) | 顶级VPN品牌之一 | 优惠码 NERDWRITER / Black Friday活动 |
-| [ExpressVPN](https://www.xvbelink.com/?a_fid=tizi_vpn&chan=luzian&data1=fq) | 顶级品牌（需翻墙后购买）| Black Friday活动，赠送3个月时长 |
+| [ExpressVPN](https://www.xvbelink.com/black-friday-cyber-monday?a_fid=tizi_vpn&chan=luzian&data1=fq) | 顶级品牌（需翻墙后购买）| Black Friday活动，赠送3个月时长 |
 | [StrongVPN](https://strongtech.org/?tr_aid=5f856c291d7a8&data1=luzian&data2=fq) | 10月份不稳定，先观察待定 |
 
 市场上的翻墙软件多如牛毛，如果你去外网搜一下”VPN”，能找到上百款APP，不过根据我的使用经验，大部分在国内都不好用，尤其是那些声称自己“免费”的，你也别浪费时间。
